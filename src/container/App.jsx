@@ -1,6 +1,5 @@
 import React, {Component} from "react";
 import {Row, Col} from "antd";
-import "antd/dist/antd.css";
 import {NavLink, withRouter} from "react-router-dom";
 
 import {MainRoute} from "../router";
@@ -13,10 +12,7 @@ class App extends Component {
           <Col span={4}>
             <ul>
               <li>
-                <NavLink to="/page1">draft</NavLink>
-              </li>
-              <li>
-                <NavLink to="/page2">test</NavLink>
+                <NavLink to="/page1">page1</NavLink>
               </li>
             </ul>
           </Col>
