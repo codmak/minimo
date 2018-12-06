@@ -15,7 +15,7 @@ export default function init(config) {
         )
       }
       {
-        config.defaultPath ? <Redirect to='/'/> : null
+        config.defaultPath ? <Redirect to={config.basePath + config.defaultPath}/> : null
       }
     </Switch>
   );

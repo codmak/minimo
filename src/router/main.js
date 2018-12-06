@@ -1,12 +1,12 @@
-import Page1 from "../container/LinkPage1";
+import Load from "../routerPage/Load";
 
 export default {
   basePath: "/",
-  defaultPath: "",
+  defaultPath: "load",
   children: [
     {
-      path: "page1",
-      component: Page1,
+      path: "load",
+      component: Load,
       exact: false
     }
   ]

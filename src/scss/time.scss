@@ -1,0 +1,7 @@
+.time {
+  > canvas {
+    @include posi(0, 0);
+    width: 100%;
+    height: 100%;
+  }
+}
