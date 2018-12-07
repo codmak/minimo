@@ -21,6 +21,20 @@ function getTimeStr(amPM) {
   return hours + ' : ' + minutes + ' : ' + seconds;
 }
 
+function getCoordinates(e, canvas) {
+  if (e.offsetX) {
+    return { x: e.offsetX, y: e.offsetY }; // use offset if available
+  } else if (e.layerX) {
+    return { x: e.layerX, y: e.layerY }; // firefox... make sure to position the canvas
+  } else {
+    // iOS. Maybe others too?
+    return {
+      x: e.pageX - canvas.offsetLeft,
+      y: e.pageY - canvas.offsetTop
+    };
+  }
+}
+
 class Time extends Component {
   constructor() {
     super();
@@ -29,7 +43,7 @@ class Time extends Component {
   }
 
   componentDidMount() {
-    const { width = 400, height = 100 } = this.props;
+    const { width = 400, height = 400 } = this.props;
     const canvas = this.canvas.current;
 
     this.time = new CanvasParticle({
@@ -37,20 +51,80 @@ class Time extends Component {
       width,
       height,
       particleColor: 'hsla(0, 0%, 0%, .6)',
-      textSize: 80,
       num: 800,
+      textSize: 80,
       gutter: 4,
       size: 6,
       getText() {
         return getTimeStr(true);
-      }
+      },
+      consume: 0.02,
+      constant: 4
     });
 
     this.time.loop();
+
+    canvas.addEventListener('mousedown', e => {
+      this.mouseOption({ press: true }, e);
+    });
+    canvas.addEventListener('mousemove', e => {
+      this.mouseOption({}, e);
+    });
+    document.addEventListener('mouseup', e => {
+      this.time.resetExplode();
+      this.mouseOption({ press: false }, e);
+    });
+    document.addEventListener('keydown', e => {
+      let key = {};
+      switch (e.keyCode) {
+        case 16:
+          key.shift = true;
+          break;
+        case 38:
+          key.up = true;
+          break;
+        case 32:
+          key.space = true;
+          break;
+        default:
+      }
+      this.mergeOption({ key });
+    });
+    document.addEventListener('keyup', e => {
+      let key = { shift: false };
+      switch (e.keyCode) {
+        case 16:
+          key.shift = false;
+          break;
+        case 38:
+          key.up = false;
+          break;
+        case 32:
+          key.space = false;
+          break;
+        default:
+      }
+      this.mergeOption({ key });
+    });
+  }
+
+  mergeOption(option) {
+    this.time.set(option);
+  }
+
+  mouseOption(option, e) {
+    const canvasPosi = this.canvas.current.getBoundingClientRect();
+    this.mergeOption({
+      ...option,
+      mouse: {
+        x: e.pageX - canvasPosi.left,
+        y: e.pageY - canvasPosi.top
+      }
+    });
   }
 
   render() {
-    const { position, width = 400, height = 100 } = this.props;
+    const { position, width = 400, height = 400 } = this.props;
     let style = {};
     if (position) {
       style = {
@@ -62,7 +136,7 @@ class Time extends Component {
     }
     return (
       <div className="time" style={style}>
-        <canvas ref={this.canvas} id="time-canvas" />
+        <canvas ref={this.canvas} />
       </div>
     );
   }
