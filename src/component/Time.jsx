@@ -21,20 +21,6 @@ function getTimeStr(amPM) {
   return hours + ' : ' + minutes + ' : ' + seconds;
 }
 
-function getCoordinates(e, canvas) {
-  if (e.offsetX) {
-    return { x: e.offsetX, y: e.offsetY }; // use offset if available
-  } else if (e.layerX) {
-    return { x: e.layerX, y: e.layerY }; // firefox... make sure to position the canvas
-  } else {
-    // iOS. Maybe others too?
-    return {
-      x: e.pageX - canvas.offsetLeft,
-      y: e.pageY - canvas.offsetTop
-    };
-  }
-}
-
 class Time extends Component {
   constructor() {
     super();
@@ -43,23 +29,24 @@ class Time extends Component {
   }
 
   componentDidMount() {
-    const { width = 400, height = 400 } = this.props;
     const canvas = this.canvas.current;
+    const { width = 400, height = 400 } = document.body.getBoundingClientRect();
 
     this.time = new CanvasParticle({
       canvas,
       width,
       height,
-      particleColor: 'hsla(0, 0%, 0%, .6)',
-      num: 800,
-      textSize: 80,
-      gutter: 4,
-      size: 6,
+      textSize: 80, // 文字大小
+      particleColor: 'hsla(0, 0%, 0%, .6)', // 圆点颜色
+      num: 800, // 圆点数量
+      gutter: 4, // 获取定位点的间隔像素
+      size: 6, // 圆点大小
+      // 图像文字的获取方法
       getText() {
         return getTimeStr(true);
       },
-      consume: 0.02,
-      constant: 4
+      consume: 0.01, // 每次圆点运动的消耗量
+      constant: 4 // 引力常量，用于远端的速度计算
     });
 
     this.time.loop();
@@ -106,10 +93,18 @@ class Time extends Component {
       }
       this.mergeOption({ key });
     });
+    window.addEventListener('resize', e => {
+      const { width, height } = document.body.getBoundingClientRect();
+      this.resizeCanvas({ width, height });
+    });
   }
 
   mergeOption(option) {
     this.time.set(option);
+  }
+
+  resizeCanvas(size) {
+    this.time.resetSize(size);
   }
 
   mouseOption(option, e) {
@@ -124,18 +119,8 @@ class Time extends Component {
   }
 
   render() {
-    const { position, width = 400, height = 400 } = this.props;
-    let style = {};
-    if (position) {
-      style = {
-        position: 'absolute',
-        ...position,
-        width,
-        height
-      };
-    }
     return (
-      <div className="time" style={style}>
+      <div className="time">
         <canvas ref={this.canvas} />
       </div>
     );

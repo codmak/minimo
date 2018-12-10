@@ -6,10 +6,10 @@
 
 @mixin make-color-list($color-list) {
   @each $name, $color in $color-list {
-    .b-#{''+$name} {
+    .b-#{'' + $name} {
       background-color: $color;
     }
-    .f-#{''+$name} {
+    .f-#{'' + $name} {
       color: $color;
     }
   }

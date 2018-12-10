@@ -1,5 +1,10 @@
 import Particle from './Particle';
 
+/**
+ * @msg: 减速，减速量为 consume
+ * @param {type}
+ * @return: number
+ */
 function applyConsume(speed, consume) {
   if (speed > 1) {
     return speed * consume;
@@ -36,6 +41,11 @@ export default class CanvasParticle {
     this.timer = null;
   }
 
+  /**
+   * @msg: 画点
+   * @param {type}
+   * @return: void
+   */
   drawPoint(point) {
     const {
       gutter,
@@ -43,6 +53,7 @@ export default class CanvasParticle {
     } = this.option;
     const { ctx, particleColor } = this.option;
 
+    // 按下向上按钮，圆点变大
     if (up) {
       point.size = point.size + 0.03;
     } else {
@@ -56,6 +67,8 @@ export default class CanvasParticle {
 
     ctx.fillStyle = particleColor;
     ctx.beginPath();
+
+    // 按下空格，圆点开始抖动
     if (space) {
       ctx.arc(
         point.x + (Math.random() - 0.5) * gutter,
@@ -79,6 +92,7 @@ export default class CanvasParticle {
    */
   particleText(imgData) {
     const { width, height, particles, gutter } = this.option;
+    // 获取图片中有文字的区域
     const pxls = [];
     for (let w = width; w > 0; w -= gutter) {
       for (let h = 0; h < height; h += gutter) {
@@ -121,7 +135,7 @@ export default class CanvasParticle {
   }
 
   /**
-   * @msg: 以鼠标为中心，吸引小圆点
+   * @msg: 以鼠标为中心，吸引/排斥小圆点
    * @param {type}
    * @return:
    */
@@ -138,18 +152,19 @@ export default class CanvasParticle {
     for (let i = 0, l = particles.length; i < l; i++) {
       const point = particles[i];
 
+      // 判断是否是文字的组成
       if (point.inText) {
+        // 获取与鼠标点下位置的相关信息
         let ax = mouse.x - point.px;
         let ay = mouse.y - point.py;
         let distance = Math.max(1, (ax * ax + ay * ay) / 64);
         let angle = Math.atan2(ay, ax);
 
-        let C = Math.cos(angle);
-        let S = Math.sin(angle);
-
+        // 消耗掉一定量的速度
         point.pVelocityX = applyConsume(point.pVelocityX, 1 - consume);
         point.pVelocityY = applyConsume(point.pVelocityY, 1 - consume);
 
+        // 遇见边框进行反向
         if (point.px < 2 * point.size) {
           point.pVelocityX = Math.abs(point.pVelocityX);
         }
@@ -163,14 +178,19 @@ export default class CanvasParticle {
           point.pVelocityY = -Math.abs(point.pVelocityY);
         }
 
+        // 系数，作用于吸引或是弹开小球
         let polarity = 1;
         if (shift) {
           polarity = -polarity;
         }
 
-        point.pVelocityX += (polarity * (constant * C)) / distance;
-        point.pVelocityY += (polarity * (constant * S)) / distance;
+        // 计算下一次的速度，根据向心加速度
+        point.pVelocityX +=
+          (polarity * (constant * Math.cos(angle))) / distance;
+        point.pVelocityY +=
+          (polarity * (constant * Math.sin(angle))) / distance;
 
+        // 计算下一次的位置
         point.x = point.px + point.pVelocityX;
         point.y = point.py + point.pVelocityY;
 
@@ -182,6 +202,11 @@ export default class CanvasParticle {
     }
   }
 
+  /**
+   * @msg: 重置圆点的状态
+   * @param {type}
+   * @return: void
+   */
   resetExplode() {
     const { particles } = this.option;
     particles.forEach(point => {
@@ -191,6 +216,11 @@ export default class CanvasParticle {
     });
   }
 
+  /**
+   * @msg: 开始画圆点
+   * @param {type}
+   * @return: void
+   */
   draw() {
     const { ctx, width, height, textSize, getText, press } = this.option;
     const timeStr = getText();
@@ -217,6 +247,11 @@ export default class CanvasParticle {
     }
   }
 
+  /**
+   * @msg: 为时钟动画设置参数 option
+   * @param {type}
+   * @return: void
+   */
   set(option) {
     Object.keys(option).forEach(key => {
       if (typeof option[key] === 'object') {
@@ -228,6 +263,12 @@ export default class CanvasParticle {
         this.option[key] = option[key];
       }
     });
+  }
+
+  resetSize(size) {
+    this.set(size);
+    this.option.canvas.width = size.width;
+    this.option.canvas.height = size.height;
   }
 
   loop() {
