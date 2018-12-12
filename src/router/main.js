@@ -1,11 +1,11 @@
-import Load from "../routerPage/Load";
+import Load from '../connent/routerPage/Load';
 
 export default {
-  basePath: "/",
-  defaultPath: "load",
+  basePath: '/',
+  defaultPath: 'load',
   children: [
     {
-      path: "load",
+      path: 'load',
       component: Load,
       exact: false
     }

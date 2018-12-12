@@ -1,6 +1,6 @@
-import {combineReducers} from 'redux';
-import todo from './todo';
+import { combineReducers } from 'redux';
+import canvasTime from './canvasTime';
 
 export default combineReducers({
-  todo
+  canvasTime
 });

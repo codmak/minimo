@@ -1,12 +1,9 @@
-.time {
-  width: 100%;
-  height: 100%;
-  position: relative;
-  top: 0;
-  left: 0;
+.canvas-wrap {
+  @include posi(0, 0);
+  @include square(100%);
+  transition: 0.4s;
   > canvas {
     @include posi(0, 0);
-    width: 100%;
-    height: 100%;
+    @include square(100%);
   }
 }

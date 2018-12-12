@@ -1,6 +1,6 @@
 export default class Particle {
-  constructor(width, height, size) {
-    const range = Math.random() * 180;
+  constructor(width, height, size, random) {
+    const range = Math.random() * 360;
 
     // 移动速率
     this.deltaX = 0.25;
@@ -22,7 +22,7 @@ export default class Particle {
     // 消耗量
     this.consume = 1;
 
-    this.size = Math.random() * size;
+    this.size = (random ? Math.random() : 1) * size;
     this.origSize = this.size;
 
     // 圆点是否形成文字
