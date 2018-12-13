@@ -2,7 +2,7 @@ export function createLoop(func) {
   let timer = -1;
   function loop() {
     func && func();
-    timer = setTimeout(loop, 1000);
+    timer = requestAnimationFrame(loop);
   }
   return {
     start: loop,

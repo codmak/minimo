@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import CanvasTime from '../canvas/Time';
-import CanvasText from '../canvas/Text';
+import { CanvasCenterText } from '../canvas/Text';
 import { createLoop } from '../util';
 
 class Canvas extends Component {
@@ -8,7 +8,7 @@ class Canvas extends Component {
     super();
     this.canvas = React.createRef();
     this.paintings = {};
-    this.loops = {};
+    this.loop = null;
   }
 
   componentDidMount = () => {
@@ -20,45 +20,54 @@ class Canvas extends Component {
 
     const ctx = canvas.getContext('2d');
 
-    this.paintings.time = new CanvasTime({
-      width,
-      height,
-      particleInfo: {
-        size: 4
+    this.paintings.time = new CanvasTime(
+      {
+        ctx,
+        width,
+        height
+      },
+      {
+        color: 'rgb(42,35,75)'
       }
-    });
+    );
 
-    this.paintings.text = new CanvasText({
-      width,
-      height,
-      particleInfo: {
-        size: 6,
-        number: 1800
+    this.paintings.text = new CanvasCenterText(
+      {
+        ctx,
+        width,
+        height
+      },
+      {
+        array: ['READY?', 'READY!'],
+        colors: ['rgba(94,83,117)', 'rgba(52,45,69)']
       }
-    });
+    );
 
-    this.paintings.time.draw();
-    this.paintings.text.draw();
-    this.paintings.time.paint();
-    this.paintings.text.paint();
+    setTimeout(() => {
+      this.paintings.time.changeTextOption({
+        color: 'rgb(254,67,101)'
+      });
+      this.paintings.text.changeTextOption({
+        array: ['READY?', 'READY!'],
+        colors: ['rgba(249,205,173)', 'rgba(252,157,154)']
+      });
+    }, 5000);
 
-    // this.loops.time = createLoop(() => {
-    //   this.paintings.time.draw();
-    //   this.paintings.text.draw();
-    //   this.paintings.time.paint();
-    //   this.paintings.text.paint();
-    // });
-    // this.loops.text = createLoop(() => this.paintings.text.draw());
-
-    this.initPaintings();
-    window.ctx = canvas.getContext('2d');
+    this.init();
   };
 
-  initPaintings = () => {
-    Object.entries(this.loops).forEach(([key, value]) => {
-      value.start();
+  init = () => {
+    // const values = Object.values(this.paintings);
+    // values.forEach(value => value.freshPointInfo());
+    // values.forEach(value => value.draw());
+
+    this.loop = createLoop(() => {
+      const values = Object.values(this.paintings);
+      values.forEach(value => value.freshPointInfo());
+      values.forEach(value => value.draw());
     });
 
+    this.loop.start();
     this.initEvent();
   };
 
@@ -140,9 +149,7 @@ class Canvas extends Component {
   };
 
   componentWillUnmount = () => {
-    Object.entries(this.loops).forEach(([key, value]) => {
-      value.stop();
-    });
+    this.loop.stop();
     this.removeEvent();
   };
 

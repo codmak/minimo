@@ -2,9 +2,20 @@ export default class Particle {
   constructor(width, height, size, random) {
     const range = Math.random() * 360;
 
+    this.color = {
+      r: 255,
+      g: 255,
+      b: 255,
+      a: 0.6
+    };
+    this.pColor = {
+      ...this.color
+    };
+    this.deltaC = 0.1;
+
     // 移动速率
-    this.deltaX = 0.25;
-    this.deltaY = 0.25;
+    this.deltaX = 0.15;
+    this.deltaY = 0.15;
 
     this.x = 0;
     this.y = 0;

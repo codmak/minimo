@@ -1,7 +1,5 @@
-export function getFullImageData({ ctx, width, height }, draw) {
-  ctx.clearRect(0, 0, width, height);
-  draw && draw(ctx);
-  const imgData = ctx.getImageData(0, 0, width, height);
-  ctx.clearRect(0, 0, width, height);
-  return imgData;
+export function changeColor(point, type, value) {
+  point.color[type] =
+    point.pColor[type] + (value - point.pColor[type]) * point.deltaC;
+  point.pColor[type] = point.color[type];
 }

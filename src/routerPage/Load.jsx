@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Canvas from '../component/Canvas';
 
 class Load extends Component {
   constructor() {
@@ -19,6 +20,7 @@ class Load extends Component {
   render() {
     return (
       <div className="load">
+        <Canvas />
         <span onClick={this.changCanvasStyle}>ok</span>
       </div>
     );

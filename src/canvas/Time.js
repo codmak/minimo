@@ -2,12 +2,22 @@ import Base from './ParticleBase';
 import { getTimeStr } from '../util';
 
 export default class CanvasTime extends Base {
-  draw() {
+  constructor(option, textOption) {
+    option.particleInfo = {
+      size: 4,
+      number: 400
+    };
+    super(option);
+    this.textOption = textOption;
+  }
+
+  freshPointInfo() {
+    const { color } = this.textOption;
     const text = getTimeStr();
     const textSize = 70;
-    return super.draw(
+    return super.freshPointInfo(
       (ctx, width, height) => {
-        ctx.fillStyle = 'rgb(111, 111, 111)';
+        ctx.fillStyle = color;
         ctx.textBaseline = 'middle';
         ctx.font = `${textSize}px 'Arial'`;
 
@@ -18,9 +28,19 @@ export default class CanvasTime extends Base {
         );
       },
       (imgData, index) => {
-        return imgData.data[index] === 111;
+        return imgData.data[index + 3] !== 0
+          ? [
+              imgData.data[index],
+              imgData.data[index + 1],
+              imgData.data[index + 2]
+            ]
+          : null;
       },
       4
     );
+  }
+
+  changeTextOption(textOption) {
+    this.textOption = textOption;
   }
 }

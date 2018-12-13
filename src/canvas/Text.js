@@ -1,25 +1,45 @@
 import Base from './ParticleBase';
 
-export default class CanvasText extends Base {
-  draw() {
-    const text = 'READY?';
-    const textSize = 170;
-    return super.draw(
-      (ctx, width, height) => {
-        ctx.fillStyle = 'rgb(111, 111, 111)';
-        ctx.textBaseline = 'middle';
-        ctx.font = `${textSize}px 'Arial'`;
+export class CanvasCenterText extends Base {
+  constructor(option, textOption) {
+    option.particleInfo = {
+      size: 6,
+      number: 8000
+    };
+    super(option);
+    this.textOption = textOption;
+  }
 
-        ctx.fillText(
-          text,
-          (width - ctx.measureText(text).width) / 2,
-          height / 2
-        );
+  freshPointInfo() {
+    const { array, colors } = this.textOption;
+    const textSize = 170;
+    return super.freshPointInfo(
+      (ctx, width, height) => {
+        ctx.textBaseline = 'middle';
+        ctx.font = `${textSize}px 'Courier'`;
+        array.forEach((str, index) => {
+          ctx.fillStyle = colors[index];
+          ctx.fillText(
+            str,
+            (width - ctx.measureText(str).width) / 2,
+            height / 2 + (index - (array.length - 1) / 2) * textSize
+          );
+        });
       },
       (imgData, index) => {
-        return imgData.data[index] === 111;
+        return imgData.data[index] !== 0
+          ? [
+              imgData.data[index],
+              imgData.data[index + 1],
+              imgData.data[index + 2]
+            ]
+          : null;
       },
       4
     );
+  }
+
+  changeTextOption(textOption) {
+    this.textOption = textOption;
   }
 }

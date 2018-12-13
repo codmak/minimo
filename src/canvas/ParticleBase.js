@@ -1,5 +1,6 @@
 import { mergeDeepRight } from 'ramda';
 import Particle from './Particle';
+import { changeColor } from '../util';
 
 /**
  * @msg: 减速，减速量为 consume
@@ -7,7 +8,7 @@ import Particle from './Particle';
  * @return: number
  */
 function applyConsume(speed, consume) {
-  if (speed > 10) {
+  if (Math.abs(speed) > 4) {
     return speed * consume;
   }
   return speed;
@@ -23,8 +24,7 @@ const mergeOption = mergeDeepRight({
     color: 'rgba(0, 0, 0, .6)',
     number: 800,
     random: true
-  },
-  particles: []
+  }
 });
 
 export default class Base {
@@ -44,30 +44,22 @@ export default class Base {
     const {
       width,
       height,
-      particleInfo: { size, number, random },
-      particles
+      particleInfo: { size, number, random }
     } = option;
 
-    const canvas = document.createElement('canvas');
-    canvas.width = width;
-    canvas.height = height;
-    option.canvas = canvas;
-    option.ctx = canvas.getContext('2d');
-
+    const particles = [];
     for (let i = 0; i < number; i++) {
       particles.push(new Particle(width, height, size, random));
     }
+    option.particles = particles;
 
     this.option = option;
   }
 
   drawPoint(point) {
-    if (!point.inText) return;
+    if (!point.needDraw) return;
     const {
-      option: {
-        ctx,
-        particleInfo: { color }
-      },
+      option: { ctx },
       key: { bigger, shake }
     } = this;
     // 按下向上按钮，圆点变大
@@ -82,8 +74,9 @@ export default class Base {
       }
     }
 
-    ctx.fillStyle = color;
-    console.log(color)
+    ctx.fillStyle = `rgba(${point.color.r},${point.color.g},${point.color.b},${
+      point.color.a
+    })`;
     ctx.beginPath();
 
     // 按下空格，圆点开始抖动
@@ -97,9 +90,9 @@ export default class Base {
         true
       );
     } else {
-      console.log('draw')
       ctx.arc(point.x, point.y, point.size, 0, Math.PI * 2, true);
     }
+
     ctx.closePath();
     ctx.fill();
   }
@@ -111,32 +104,34 @@ export default class Base {
     for (let w = 0; w < width; w += gutter) {
       for (let h = 0; h < height; h += gutter) {
         let index = (w + h * width) * 4;
-        if (checkImageData(index)) {
-          pxls.push([w, h]);
+        let color = checkImageData(index);
+        if (color) {
+          pxls.push([w, h, color]);
         }
       }
     }
 
     for (let i = 0; i < pxls.length && i < particles.length; i++) {
       let point = particles[i],
-        X,
-        Y;
+        X = pxls[i][0] - point.px,
+        Y = pxls[i][1] - point.py;
 
-      X = pxls[i][0] - point.px;
-      Y = pxls[i][1] - point.py;
+      changeColor(point, 'r', pxls[i][2][0]);
+      changeColor(point, 'g', pxls[i][2][1]);
+      changeColor(point, 'b', pxls[i][2][2]);
 
       // 直线距离
       const T = Math.sqrt(X * X + Y * Y);
       // 获取与 x 轴的夹角
       const angle = Math.atan2(Y, X);
       // 设置圆点新值
-      point.x = point.px + Math.cos(angle) * T * Math.abs(point.deltaX);
-      point.y = point.py + Math.sin(angle) * T * Math.abs(point.deltaY);
+      point.x = point.px + Math.cos(angle) * T * point.deltaX;
+      point.y = point.py + Math.sin(angle) * T * point.deltaY;
       // 用新值代替起始位置
       point.px = point.x;
       point.py = point.y;
       // 是否是文字的组成
-      point.inText = true;
+      point.needDraw = true;
       // 画出该点
     }
   }
@@ -145,82 +140,76 @@ export default class Base {
     const {
       mouse,
       key: { rebound },
-      option: { canvas, width, height, constant, consume, particles }
+      option: { width, height, constant, consume, particles }
     } = this;
     for (let i = 0, l = particles.length; i < l; i++) {
       const point = particles[i];
 
-      // 判断是否是文字的组成
-      if (point.inText) {
-        // 获取与鼠标点下位置的相关信息
-        let ax = mouse.x - point.px;
-        let ay = mouse.y - point.py;
-        let distance = Math.max(1, (ax * ax + ay * ay) / 64);
-        let angle = Math.atan2(ay, ax);
+      // 获取与鼠标点下位置的相关信息
+      let ax = mouse.x - point.px;
+      let ay = mouse.y - point.py;
+      let distance = Math.max(1, (ax * ax + ay * ay) / 64);
+      let angle = Math.atan2(ay, ax);
 
-        // 消耗掉一定量的速度
-        point.pVelocityX = applyConsume(point.pVelocityX, 1 - consume);
-        point.pVelocityY = applyConsume(point.pVelocityY, 1 - consume);
+      // 消耗掉一定量的速度
+      point.pVelocityX = applyConsume(point.pVelocityX, 1 - consume);
+      point.pVelocityY = applyConsume(point.pVelocityY, 1 - consume);
 
-        // 边框反弹
-        if (point.px < 2 * point.size) {
-          point.pVelocityX = Math.abs(point.pVelocityX);
-        }
-        if (point.px > width - 2 * point.size) {
-          point.pVelocityX = -Math.abs(point.pVelocityX);
-        }
-        if (point.py < 2 * point.size) {
-          point.pVelocityY = Math.abs(point.pVelocityY);
-        }
-        if (point.py > height - 2 * point.size) {
-          point.pVelocityY = -Math.abs(point.pVelocityY);
-        }
-
-        // 系数，作用于吸引或是弹开小球
-        let polarity = 1;
-        if (rebound) {
-          polarity = -polarity;
-        }
-
-        // 计算下一次的速度，根据向心加速度
-        point.pVelocityX +=
-          (polarity * (constant * Math.cos(angle))) / distance;
-        point.pVelocityY +=
-          (polarity * (constant * Math.sin(angle))) / distance;
-
-        // 计算下一次的位置
-        point.x = point.px + point.pVelocityX;
-        point.y = point.py + point.pVelocityY;
-
-        point.px = point.x;
-        point.py = point.y;
-
-        this.drawPoint(point);
+      // 边框反弹
+      if (point.px < 2 * point.size) {
+        point.pVelocityX = Math.abs(point.pVelocityX);
       }
+      if (point.px > width - 2 * point.size) {
+        point.pVelocityX = -Math.abs(point.pVelocityX);
+      }
+      if (point.py < 2 * point.size) {
+        point.pVelocityY = Math.abs(point.pVelocityY);
+      }
+      if (point.py > height - 2 * point.size) {
+        point.pVelocityY = -Math.abs(point.pVelocityY);
+      }
+
+      // 系数，作用于吸引或是弹开小球
+      let polarity = 1;
+      if (rebound) {
+        polarity = -polarity;
+      }
+
+      // 计算下一次的速度，根据向心加速度
+      point.pVelocityX += (polarity * (constant * Math.cos(angle))) / distance;
+      point.pVelocityY += (polarity * (constant * Math.sin(angle))) / distance;
+
+      // 计算下一次的位置
+      point.x = point.px + point.pVelocityX;
+      point.y = point.py + point.pVelocityY;
+
+      point.px = point.x;
+      point.py = point.y;
     }
-    return canvas;
   }
 
-  draw(paint, checkImageData, gutter = 4) {
+  freshPointInfo(paint, checkImageData, gutter = 4) {
     const {
       key: { explode },
-      option: { ctx, width, height }
+      option: { ctx, width, height, particles }
     } = this;
     ctx.clearRect(0, 0, width, height);
+
     paint(ctx, width, height);
 
     const imgData = ctx.getImageData(0, 0, width, height);
     ctx.clearRect(0, 0, width, height);
+
     if (explode) {
       this.explode();
     } else {
+      particles.forEach(point => (point.needDraw = false));
       this.particleText(index => checkImageData(imgData, index), gutter);
     }
   }
 
-  paint() {
+  draw() {
     const { particles } = this.option;
-    console.log(23123);
     particles.forEach(point => this.drawPoint(point));
   }
 
