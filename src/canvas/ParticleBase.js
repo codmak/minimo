@@ -113,8 +113,8 @@ export default class Base {
 
     for (let i = 0; i < pxls.length && i < particles.length; i++) {
       let point = particles[i],
-        X = pxls[i][0] - point.px,
-        Y = pxls[i][1] - point.py;
+        X = pxls[i][0] - point.x,
+        Y = pxls[i][1] - point.y;
 
       changeColor(point, 'r', pxls[i][2][0]);
       changeColor(point, 'g', pxls[i][2][1]);
@@ -125,11 +125,8 @@ export default class Base {
       // 获取与 x 轴的夹角
       const angle = Math.atan2(Y, X);
       // 设置圆点新值
-      point.x = point.px + Math.cos(angle) * T * point.deltaX;
-      point.y = point.py + Math.sin(angle) * T * point.deltaY;
-      // 用新值代替起始位置
-      point.px = point.x;
-      point.py = point.y;
+      point.x += Math.cos(angle) * T * point.deltaX;
+      point.y += Math.sin(angle) * T * point.deltaY;
       // 是否是文字的组成
       point.needDraw = true;
       // 画出该点
@@ -146,8 +143,8 @@ export default class Base {
       const point = particles[i];
 
       // 获取与鼠标点下位置的相关信息
-      let ax = mouse.x - point.px;
-      let ay = mouse.y - point.py;
+      let ax = mouse.x - point.x;
+      let ay = mouse.y - point.y;
       let distance = Math.max(1, (ax * ax + ay * ay) / 64);
       let angle = Math.atan2(ay, ax);
 
@@ -156,16 +153,16 @@ export default class Base {
       point.pVelocityY = applyConsume(point.pVelocityY, 1 - consume);
 
       // 边框反弹
-      if (point.px < 2 * point.size) {
+      if (point.x < 2 * point.size) {
         point.pVelocityX = Math.abs(point.pVelocityX);
       }
-      if (point.px > width - 2 * point.size) {
+      if (point.x > width - 2 * point.size) {
         point.pVelocityX = -Math.abs(point.pVelocityX);
       }
-      if (point.py < 2 * point.size) {
+      if (point.y < 2 * point.size) {
         point.pVelocityY = Math.abs(point.pVelocityY);
       }
-      if (point.py > height - 2 * point.size) {
+      if (point.y > height - 2 * point.size) {
         point.pVelocityY = -Math.abs(point.pVelocityY);
       }
 
@@ -180,11 +177,8 @@ export default class Base {
       point.pVelocityY += (polarity * (constant * Math.sin(angle))) / distance;
 
       // 计算下一次的位置
-      point.x = point.px + point.pVelocityX;
-      point.y = point.py + point.pVelocityY;
-
-      point.px = point.x;
-      point.py = point.y;
+      point.x += point.pVelocityX;
+      point.y += point.pVelocityY;
     }
   }
 
@@ -238,5 +232,19 @@ export default class Base {
       ...this.mouse,
       ...mouse
     };
+  }
+
+  changeParticleInfo(particleInfo) {
+    this.option.particles.forEach(particle => {
+      if ('size' in particleInfo) {
+        particle.changesize(particleInfo.size);
+      }
+    });
+  }
+
+  resetParticlePositon() {
+    this.option.particles.forEach(particle => {
+      particle.resetPosition();
+    });
   }
 }

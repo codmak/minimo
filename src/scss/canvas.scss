@@ -5,6 +5,11 @@
   > canvas {
     @include posi(0, 0);
     @include square(100%);
-    background: #eee;
+  }
+  .next {
+    @include posi(50%, null, 0, 10px);
+  }
+  .prev {
+    @include posi(50%, 10px, 0);
   }
 }

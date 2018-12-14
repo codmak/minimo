@@ -2,6 +2,10 @@ export default class Particle {
   constructor(width, height, size, random) {
     const range = Math.random() * 360;
 
+    this.width = width;
+    this.height = height;
+    this.random = random;
+
     this.color = {
       r: 255,
       g: 255,
@@ -14,15 +18,12 @@ export default class Particle {
     this.deltaC = 0.1;
 
     // 移动速率
-    this.deltaX = 0.15;
-    this.deltaY = 0.15;
-
-    this.x = 0;
-    this.y = 0;
+    this.deltaX = 0.25;
+    this.deltaY = 0.25;
 
     // 开始的位置
-    this.px = width / 2 + (Math.cos(range) * width) / 2;
-    this.py = height / 2 + (Math.sin(range) * height) / 2;
+    this.x = width / 2 + (Math.cos(range) * Math.random() * width) / 2;
+    this.y = height / 2 + (Math.sin(range) * Math.random() * height) / 2;
 
     // 速度
     this.velocityX = Math.floor(Math.random() * 10) - 5;
@@ -38,5 +39,17 @@ export default class Particle {
 
     // 圆点是否形成文字
     this.inText = false;
+  }
+
+  changesize(size) {
+    this.size = (this.random ? Math.random() : 1) * size;
+    this.origSize = this.size;
+  }
+
+  resetPosition() {
+    const { width, height } = this;
+    const range = Math.random() * 360;
+    this.x = width / 2 + (Math.cos(range) * Math.random() * width) / 2;
+    this.y = height / 2 + (Math.sin(range) * Math.random() * height) / 2;
   }
 }

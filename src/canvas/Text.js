@@ -4,25 +4,28 @@ export class CanvasCenterText extends Base {
   constructor(option, textOption) {
     option.particleInfo = {
       size: 6,
-      number: 8000
+      number: 13000
     };
     super(option);
-    this.textOption = textOption;
+    this.textOption = textOption || {
+      textSize: 170,
+      gutter: 4
+    };
   }
 
   freshPointInfo() {
-    const { array, colors } = this.textOption;
-    const textSize = 170;
+    const { array, color, textSize, gutter } = this.textOption;
+    if (!array) return;
     return super.freshPointInfo(
       (ctx, width, height) => {
         ctx.textBaseline = 'middle';
         ctx.font = `${textSize}px 'Courier'`;
         array.forEach((str, index) => {
-          ctx.fillStyle = colors[index];
+          ctx.fillStyle = color[index % color.length];
           ctx.fillText(
             str,
             (width - ctx.measureText(str).width) / 2,
-            height / 2 + (index - (array.length - 1) / 2) * textSize
+            height / 2 + (index - (array.length - 1) / 2) * (textSize + 10)
           );
         });
       },
@@ -35,11 +38,14 @@ export class CanvasCenterText extends Base {
             ]
           : null;
       },
-      4
+      gutter
     );
   }
 
   changeTextOption(textOption) {
-    this.textOption = textOption;
+    this.textOption = {
+      ...this.textOption,
+      ...textOption
+    };
   }
 }

@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
+import { Button } from 'antd';
+
 import CanvasTime from '../canvas/Time';
 import { CanvasCenterText } from '../canvas/Text';
+import steps from '../canvas/steps';
 import { createLoop } from '../util';
 
 class Canvas extends Component {
@@ -9,6 +12,10 @@ class Canvas extends Component {
     this.canvas = React.createRef();
     this.paintings = {};
     this.loop = null;
+    this.steps = steps;
+    this.state = {
+      stepIndex: 0
+    };
   }
 
   componentDidMount = () => {
@@ -20,47 +27,67 @@ class Canvas extends Component {
 
     const ctx = canvas.getContext('2d');
 
-    this.paintings.time = new CanvasTime(
-      {
-        ctx,
-        width,
-        height
-      },
-      {
-        color: 'rgb(42,35,75)'
-      }
-    );
+    this.paintings.time = new CanvasTime({
+      ctx,
+      width,
+      height
+    });
 
-    this.paintings.text = new CanvasCenterText(
-      {
-        ctx,
-        width,
-        height
-      },
-      {
-        array: ['READY?', 'READY!'],
-        colors: ['rgba(94,83,117)', 'rgba(52,45,69)']
-      }
-    );
-
-    setTimeout(() => {
-      this.paintings.time.changeTextOption({
-        color: 'rgb(254,67,101)'
-      });
-      this.paintings.text.changeTextOption({
-        array: ['READY?', 'READY!'],
-        colors: ['rgba(249,205,173)', 'rgba(252,157,154)']
-      });
-    }, 5000);
+    this.paintings.text = new CanvasCenterText({
+      ctx,
+      width,
+      height
+    });
 
     this.init();
   };
 
+  render = () => {
+    const { stepIndex } = this.state;
+    return (
+      <div className="canvas-wrap">
+        <canvas ref={this.canvas} />
+        <Button
+          className="prev"
+          type="primary"
+          shape="circle"
+          icon="left"
+          disabled={stepIndex === 0}
+          onClick={this.prev}
+        />
+        <Button
+          className="next"
+          type="primary"
+          shape="circle"
+          icon="right"
+          disabled={stepIndex === this.steps.length}
+          onClick={this.next}
+        />
+      </div>
+    );
+  };
+
+  next = () => {
+    const { stepIndex } = this.state;
+    this.setState({
+      stepIndex: stepIndex + 1
+    });
+    this.steps[stepIndex + 1](this.paintings);
+  };
+
+  prev = () => {
+    const { stepIndex } = this.state;
+    this.setState({
+      stepIndex: stepIndex - 1
+    });
+    this.steps[stepIndex - 1](this.paintings);
+  };
+
   init = () => {
+    const { steps } = this;
     // const values = Object.values(this.paintings);
     // values.forEach(value => value.freshPointInfo());
     // values.forEach(value => value.draw());
-
     this.loop = createLoop(() => {
       const values = Object.values(this.paintings);
       values.forEach(value => value.freshPointInfo());
@@ -69,6 +96,8 @@ class Canvas extends Component {
 
     this.loop.start();
     this.initEvent();
+
+    steps[0](this.paintings);
   };
 
   mouseDown = e => {
@@ -171,14 +200,6 @@ class Canvas extends Component {
     document.removeEventListener('keydown', this.keyDown);
     document.removeEventListener('keyup', this.keyUp);
     window.removeEventListener('resize', this.windowResize);
-  };
-
-  render = () => {
-    return (
-      <div className="canvas-wrap">
-        <canvas ref={this.canvas} />
-      </div>
-    );
   };
 }
 
