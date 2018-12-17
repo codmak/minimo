@@ -1,5 +1,5 @@
 import React from 'react';
-import {LocaleProvider} from 'antd';
+import { LocaleProvider } from 'antd';
 
 export function applyLanguage(type) {
   let language = '';
@@ -7,12 +7,7 @@ export function applyLanguage(type) {
     import('moment/locale/zh-cn');
     language = import('antd/lib/locale-provider/zh_CN');
   }
-  return (children) => {
-    return (
-      <LocaleProvider locale={language}>
-        {children}
-      </LocaleProvider>
-    );
+  return children => {
+    return <LocaleProvider locale={language}>{children}</LocaleProvider>;
   };
-
 }

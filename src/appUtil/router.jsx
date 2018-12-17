@@ -1,7 +1,8 @@
 import React from 'react';
 import {Route, Switch, Redirect} from 'react-router-dom';
+import { BrowserRouter, HashRouter } from 'react-router-dom';
 
-export default function init(config) {
+export function initRouter(config) {
   return (
     <Switch>
       {
@@ -19,4 +20,11 @@ export default function init(config) {
       }
     </Switch>
   );
+}
+
+export function applyRouter(type) {
+  const Route = type === 'browser' ? BrowserRouter : HashRouter;
+  return children => {
+    return <Route>{children}</Route>;
+  };
 }

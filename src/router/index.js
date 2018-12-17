@@ -1,15 +1,6 @@
-import React from 'react';
-import { BrowserRouter, HashRouter } from 'react-router-dom';
-import init from './init';
+import { initRouter } from '../appUtil/router';
 import main from './main';
 
-export default function applyRouter(type) {
-  const Route = type === 'browser' ? BrowserRouter : HashRouter;
-  return children => {
-    return <Route>{children}</Route>;
-  };
-}
-
-const MainRoute = () => init(main);
+const MainRoute = () => initRouter(main);
 
 export { MainRoute };

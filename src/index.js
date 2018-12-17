@@ -1,15 +1,22 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './container/App';
+import App from './App';
 
-import bind, {applyLanguage} from './bind/';
-import applyStore from './store';
-import applyRouter from './router';
+import {
+  wrapComponent,
+  applyLanguage,
+  applyStore,
+  applyRouter
+} from './appUtil';
 
-import "antd/dist/antd.css";
+import 'antd/dist/antd.css';
 import './scss/index.scss';
 
 ReactDOM.render(
-  bind(<App/>, [applyStore, applyRouter('hash'), applyLanguage('zh_cn')]),
+  wrapComponent(<App />, [
+    applyStore,
+    applyRouter('hash'),
+    applyLanguage('zh_cn')
+  ]),
   document.getElementById('root')
 );

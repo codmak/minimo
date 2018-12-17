@@ -1,4 +1,5 @@
-import Load from '../connent/routerPage/Load';
+import Load from '../routerPage/Load';
+import Canvas from '../routerPage/Canvas';
 
 export default {
   basePath: '/',
@@ -7,6 +8,11 @@ export default {
     {
       path: 'load',
       component: Load,
+      exact: false
+    },
+    {
+      path: 'canvas',
+      component: Canvas,
       exact: false
     }
   ]

@@ -38,8 +38,6 @@ function createMusicText(item) {
   };
 }
 
-const color = ['rgb(157,210,231)', 'rgb(255,236,217)', 'rgb(222,164,163)'];
-
 export default [
   paintings => {
     paintings.time.changeParticleInfo({ size: 6 });
@@ -53,15 +51,15 @@ export default [
     paintings.time.changeParticleInfo({ size: 4 });
     paintings.time.changeTextOption({
       textSize: 70,
-      color: color[0],
+      color: 'rgb(157,210,231)',
       center: false
     });
     paintings.text.changeTextOption({
       array: ['给你', '最甜的情话', '--by ACO'],
-      color: color,
+      color: getColor(),
       textSize: 100
     });
   },
   ...beforeText.map(item => createBeforeText(item)),
-  ...musicText.map(item => createMusicText(item))
+  //...musicText.map(item => createMusicText(item))
 ];
