@@ -1,10 +1,16 @@
 import { getBeforeText, getMusicText } from '../data/say';
+import colors from '../data/color';
 
 const beforeText = getBeforeText();
 const musicText = getMusicText();
 
-function createBeforeText(item, color) {
+const getColor = () => {
+  return colors[Math.floor(Math.random() * colors.length)];
+};
+
+function createBeforeText(item) {
   return paintings => {
+    const color = getColor();
     paintings.time.changeTextOption({
       color: color[0]
     });
@@ -15,8 +21,9 @@ function createBeforeText(item, color) {
   };
 }
 
-function createMusicText(item, color) {
+function createMusicText(item) {
   return paintings => {
+    const color = getColor();
     paintings.time.changeTextOption({
       color: color[0]
     });
@@ -55,6 +62,6 @@ export default [
       textSize: 100
     });
   },
-  ...beforeText.map(item => createBeforeText(item, color)),
-  ...musicText.map(item => createMusicText(item, color))
+  ...beforeText.map(item => createBeforeText(item)),
+  ...musicText.map(item => createMusicText(item))
 ];

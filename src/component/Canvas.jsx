@@ -60,7 +60,7 @@ class Canvas extends Component {
           type="primary"
           shape="circle"
           icon="right"
-          disabled={stepIndex === this.steps.length}
+          disabled={stepIndex === this.steps.length - 1}
           onClick={this.next}
         />
       </div>

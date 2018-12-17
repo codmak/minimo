@@ -2,9 +2,23 @@
  * @Author: Aco
  * @Date: 2018-12-11 10:55:13
  * @LastEditors: Aco
- * @LastEditTime: 2018-12-14 15:05:20
+ * @LastEditTime: 2018-12-17 13:54:54
  * @Description: 所有的情话都不如你
  */
+
+export function getBeforeText() {
+  return wantSayToYou.before;
+}
+
+export function getMusicText() {
+  const arr = wantSayToYou.nesteastMusic;
+  return arr.map(item => ({
+    text: [...item.text, `--by ${item.name}`],
+    textOption: item.textOption,
+    particleSize: item.particleSize
+  }));
+}
+
 const wantSayToYou = {
   before: [
     {
@@ -12,6 +26,24 @@ const wantSayToYou = {
     },
     {
       text: ['READY!']
+    }
+  ],
+  after: [
+    {
+      text: ['从今以后，', '只要你想，', '只要我有']
+    },
+    {
+      text: [
+        '有人说：',
+        '爱情是所有的激情。',
+        '直到遇见了你，',
+        '才知道，爱情是：',
+        '柴米油盐酱醋茶的生活中，',
+        '有你。'
+      ]
+    },
+    {
+      text: ['当然', '所有的情话都不如你']
     }
   ],
   nesteastMusic: [
@@ -26,7 +58,7 @@ const wantSayToYou = {
       name: '这世界唯一的你'
     },
     {
-      text: ['下辈子', '我们还会在一起么？', '上辈子', '你就问过这个问题了。'],
+      text: ['下辈子', '我们还会在一起么？', '上辈子', '你就问过这个问题啦。'],
       name: 'Lucky'
     },
     {
@@ -88,21 +120,71 @@ const wantSayToYou = {
         '和每一天的你。'
       ],
       name: '左边'
+    },
+    {
+      text: ['春夏秋冬，', '你若在场，', '就很美好。'],
+      name: '春夏秋冬'
+    },
+    {
+      text: ['想你', '在日里、 在夜里，', '在每一个恍惚的刹那里。'],
+      name: '借我'
+    },
+    {
+      text: [
+        '桃花浪漫，海棠明媚，',
+        '含笑天真，铃兰清丽，',
+        '都似你，却不及你。'
+      ],
+      name: '爱我别走'
+    },
+    {
+      text: [
+        '希望我能成为你的小众喜好，',
+        '藏着欣喜不已，',
+        '炫耀时格外骄傲。'
+      ],
+      name: '你不在'
+    }
+  ],
+  threeLine: [
+    {
+      text: ['子曰：三思而后行', '1...2...3...', '我喜欢你'],
+      by: '三行情书'
+    },
+    {
+      text: ['自从喜欢你', '我的PH', '总是小于7'],
+      by: '三行情书'
+    }
+  ],
+  code: [
+    {
+      text: [
+        'do {',
+        'console.log("i love you"); year++;',
+        '} while (year <= 10000)'
+      ]
+    },
+    {
+      text: [
+        'console.log("i love you");',
+        'for(let i=0; i < forever; i++)',
+        '  console.log("i love you");'
+      ]
+    },
+    {
+      text: [
+        'do{',
+        '  I.love(You);',
+        '} while(You.love() === I || You.love() !== I)'
+      ]
+    },
+    {
+      text: [
+        'const I = {};',
+        'I.lover = You;',
+        'I.lover = Other;',
+        '// Error Can not change I.lover'
+      ]
     }
   ]
 };
-
-export function getBeforeText() {
-  return wantSayToYou.before;
-}
-
-export function getMusicText() {
-  const arr = wantSayToYou.nesteastMusic;
-  return arr.map(item => ({
-    text: [...item.text, `--by ${item.name}`],
-    textOption: item.textOption,
-    particleSize: item.particleSize
-  }));
-}
-
-export const colorList = [];
