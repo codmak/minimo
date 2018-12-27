@@ -2,7 +2,7 @@
  * @Author: Aco
  * @Date: 2018-12-11 10:55:13
  * @LastEditors: Aco
- * @LastEditTime: 2018-12-17 13:54:54
+ * @LastEditTime: 2018-12-24 15:12:54
  * @Description: 所有的情话都不如你
  */
 
@@ -144,6 +144,10 @@ const wantSayToYou = {
         '炫耀时格外骄傲。'
       ],
       name: '你不在'
+    },
+    {
+      text: ['你就这样一路蹦蹦跳跳，', '撒着小星星跑到我心里啦'],
+      name: 'Heartbeat'
     }
   ],
   threeLine: [

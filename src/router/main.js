@@ -1,13 +1,13 @@
-import Load from '../routerPage/Load';
+import Loading from '../routerPage/Loading';
 import Canvas from '../routerPage/Canvas';
 
 export default {
   basePath: '/',
-  defaultPath: 'load',
+  defaultPath: 'loading',
   children: [
     {
-      path: 'load',
-      component: Load,
+      path: 'loading',
+      component: Loading,
       exact: false
     },
     {

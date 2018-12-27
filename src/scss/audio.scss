@@ -1,0 +1,12 @@
+.audio-wrap {
+  // @include circle(50px);
+  background: #eee;
+  cursor: pointer;
+  audio {
+    // display: none;
+  }
+  .icon {
+    @include circle(50px);
+    opacity: 0.8;
+  }
+}
