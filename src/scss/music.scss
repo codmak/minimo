@@ -1,0 +1,10 @@
+.music-wrap-all {
+  @include square(100%);
+  .season-row {
+    height: 50%;
+    .season-box {
+      flex: 0 0 50%;
+      @include size(50%, 100%);
+    }
+  }
+}

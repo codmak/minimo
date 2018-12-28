@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Motion, spring, presets } from 'react-motion';
 
 export default class Audio extends Component {
   constructor() {
@@ -24,31 +25,49 @@ export default class Audio extends Component {
     audio.removeEventListener('ended', this.playEnd);
   }
 
+  componentDidUpdate() {
+    const { play } = this.props;
+    const audio = this.audioRef.current;
+    if (!play) {
+      audio.pause();
+    }
+  }
+
   togglePlay = () => {
     const { palyState } = this.state;
+    const { id, playCallback, play } = this.props;
     const audio = this.audioRef.current;
-    switch (palyState) {
-      case 3:
-      case 1:
-        audio.play();
-        this.setState({ palyState: 2 });
-        break;
-      case 2:
-        audio.pause();
-        this.setState({ palyState: 1 });
-        break;
-      default:
+
+    if (!play) {
+      audio.play();
+      playCallback(id);
+      this.setState({ palyState: 2 });
+    } else {
+      switch (palyState) {
+        case 3:
+        case 1:
+          audio.play();
+          playCallback(id);
+          this.setState({ palyState: 2 });
+          break;
+        case 2:
+          audio.pause();
+          this.setState({ palyState: 1 });
+          break;
+        default:
+      }
     }
   };
 
   getIcon = palyState => {
+    const { play } = this.props;
+    if (!play) return '#icon-bofang';
     switch (palyState) {
       case 1:
+      case 3:
         return '#icon-bofang';
       case 2:
         return '#icon-zanting';
-      case 3:
-        return '#icon-xiayishou';
       default:
     }
   };
@@ -56,11 +75,26 @@ export default class Audio extends Component {
   render = () => {
     const { audio } = this.props;
     const { palyState } = this.state;
+    const { play } = this.props;
     return (
-      <div className="audio-wrap x-row" onClick={this.togglePlay}>
-        <svg className="icon" aria-hidden="true">
+      <div className="audio-wrap x-row">
+        <svg className="icon" aria-hidden="true" onClick={this.togglePlay}>
           <use xlinkHref={this.getIcon(palyState)} />
         </svg>
+        <Motion
+          defaultStyle={{ x: 0 }}
+          style={{ x: spring(palyState === 3 && play ? 50 : 0) }}
+        >
+          {value => (
+            <svg
+              className="icon"
+              aria-hidden="true"
+              style={{ width: value.x, height: value.x }}
+            >
+              <use xlinkHref="#icon-xiayishou" />
+            </svg>
+          )}
+        </Motion>
         <audio controls src={audio} ref={this.audioRef} />
       </div>
     );
