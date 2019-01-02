@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { Motion, spring, presets } from 'react-motion';
 
-export default class Audio extends Component {
+export default class Audio extends PureComponent {
   constructor() {
     super();
     this.audioRef = React.createRef();
@@ -16,42 +16,39 @@ export default class Audio extends Component {
   };
 
   componentDidMount() {
-    const audio = this.audioRef.current;
-    audio.addEventListener('ended', this.playEnd);
+    this.audio = this.audioRef.current;
+    this.audio.addEventListener('ended', this.playEnd);
   }
 
   componentWillUnmount() {
-    const audio = this.audioRef.current;
-    audio.removeEventListener('ended', this.playEnd);
+    this.audio.removeEventListener('ended', this.playEnd);
   }
 
   componentDidUpdate() {
     const { play } = this.props;
-    const audio = this.audioRef.current;
     if (!play) {
-      audio.pause();
+      this.audio.pause();
     }
   }
 
   togglePlay = () => {
     const { palyState } = this.state;
-    const { id, playCallback, play } = this.props;
-    const audio = this.audioRef.current;
+    const { id, setSetp, play } = this.props;
 
     if (!play) {
-      audio.play();
-      playCallback(id);
+      this.audio.play();
+      setSetp(id);
       this.setState({ palyState: 2 });
     } else {
       switch (palyState) {
         case 3:
         case 1:
-          audio.play();
-          playCallback(id);
+          this.audio.play();
+          setSetp(id);
           this.setState({ palyState: 2 });
           break;
         case 2:
-          audio.pause();
+          this.audio.pause();
           this.setState({ palyState: 1 });
           break;
         default:
@@ -77,7 +74,7 @@ export default class Audio extends Component {
     const { palyState } = this.state;
     const { play } = this.props;
     return (
-      <div className="audio-wrap x-row">
+      <div className="audio-wrap x-row p-a">
         <svg className="icon" aria-hidden="true" onClick={this.togglePlay}>
           <use xlinkHref={this.getIcon(palyState)} />
         </svg>

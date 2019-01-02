@@ -1,5 +1,5 @@
-import Base from './ParticleBase';
-import { getTimeStr } from '../util';
+import Base from './PaintingBase';
+import { getTimeStr } from '../../util';
 
 export default class CanvasTime extends Base {
   constructor(option, textOption) {

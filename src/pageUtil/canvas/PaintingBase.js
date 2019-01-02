@@ -1,6 +1,6 @@
 import { mergeDeepRight } from 'ramda';
 import Particle from './Particle';
-import { changeColor } from '../util';
+import { changeColor } from '../../util';
 
 /**
  * @msg: 减速，减速量为 consume
@@ -30,11 +30,16 @@ const mergeOption = mergeDeepRight({
 export default class Base {
   constructor(option) {
     this.key = {
+      // 吸引或是弹开条件
       rebound: false,
+      // 鼠标按下爆炸
       explode: false,
+      // 圆点变大
       bigger: false,
+      // 圆点抖动
       shake: false
     };
+    // 鼠标信息
     this.mouse = {
       x: 0,
       y: 0

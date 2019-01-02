@@ -1,5 +1,5 @@
-import { getBeforeText, getMusicText } from '../data/say';
-import colors from '../data/color';
+import { getBeforeText, getMusicText } from './data/say';
+import colors from './data/color';
 
 const beforeText = getBeforeText();
 const musicText = getMusicText();
@@ -55,11 +55,11 @@ export default [
       center: false
     });
     paintings.text.changeTextOption({
-      array: ['给你', '最甜的情话', '--by ACO'],
+      array: ['想跟你说', '最甜的情话', '--by ACO'],
       color: getColor(),
       textSize: 100
     });
   },
   ...beforeText.map(item => createBeforeText(item)),
-  //...musicText.map(item => createMusicText(item))
+  ...musicText.map(item => createMusicText(item))
 ];

@@ -1,12 +1,12 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import Audio from '../component/Audio';
+import Spring from '../component/Spring';
 
-import springMp3 from '../assert/media/spring.mp3';
 import summerMp3 from '../assert/media/summer.flac';
 import autumnMp3 from '../assert/media/autumn.mp3';
 import winterMp3 from '../assert/media/winter.mp3';
 
-export default class Music extends Component {
+export default class Music extends PureComponent {
   constructor() {
     super();
     this.state = {
@@ -20,43 +20,42 @@ export default class Music extends Component {
     });
   };
 
+  setSetp = step => {
+    this.setState({
+      step
+    });
+  };
+
   render = () => {
     const { step } = this.state;
     return (
       <div className="music-wrap-all">
         <div className="x-row season-row">
-          <div className="season-box x-center spring">
-            <Audio
-              audio={springMp3}
-              id="spring"
-              play={step === 'spring'}
-              playCallback={this.playCallback}
-            />
-          </div>
-          <div className="season-box x-center summer">
+          <Spring step={step} setSetp={this.setSetp} />
+          <div className="season-box summer p-r">
             <Audio
               audio={summerMp3}
               id="summer"
               play={step === 'summer'}
-              playCallback={this.playCallback}
+              setSetp={this.playCallback}
             />
           </div>
         </div>
         <div className="x-row season-row">
-          <div className="season-box x-center autumn">
+          <div className="season-box autumn p-r">
             <Audio
               audio={autumnMp3}
               id="autumn"
               play={step === 'autumn'}
-              playCallback={this.playCallback}
+              setSetp={this.playCallback}
             />
           </div>
-          <div className="season-box x-center winter">
+          <div className="season-box winter p-r">
             <Audio
               audio={winterMp3}
               id="winter"
               play={step === 'winter'}
-              playCallback={this.playCallback}
+              setSetp={this.playCallback}
             />
           </div>
         </div>

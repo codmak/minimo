@@ -1,6 +1,6 @@
-import Base from './ParticleBase';
+import Base from './PaintingBase';
 
-export class CanvasCenterText extends Base {
+export default class CanvasCenterText extends Base {
   constructor(option, textOption) {
     option.particleInfo = {
       size: 6,

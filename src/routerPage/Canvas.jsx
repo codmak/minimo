@@ -1,12 +1,12 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { Button } from 'antd';
 
-import CanvasTime from '../canvas/Time';
-import { CanvasCenterText } from '../canvas/Text';
-import steps from '../canvas/steps';
+import CanvasTime from '../pageUtil/canvas/Time';
+import CanvasCenterText from '../pageUtil/canvas/Text';
+import steps from '../pageUtil/canvas/steps';
 import { createLoop } from '../util';
 
-class Canvas extends Component {
+class Canvas extends PureComponent {
   constructor() {
     super();
     this.canvas = React.createRef();
