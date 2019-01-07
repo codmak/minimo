@@ -1,16 +1,22 @@
-.audio-wrap {
-  @include size(fit-content, 50px);
-  border-radius: 25px;
-  background: #eee;
-  cursor: pointer;
-  @include posi(50%, 50%);
-  transform: translate3d(-50%, -50%, 0);
-  opacity: 0.6;
-  audio {
-    display: none;
+.audio-wrap-all {
+  @include square(100%);
+  @extend .x-center;
+  .awa-wrap {
+    @include size(fit-content, 50px);
+    border-radius: 25px;
+    background: #eee;
+    cursor: pointer;
+    opacity: 0.6;
+    audio {
+      display: none;
+    }
+    .awa-icon {
+      @include circle(50px);
+      opacity: 0.8;
+    }
   }
-  .icon {
-    @include circle(50px);
-    opacity: 0.8;
+  .awa-canvas {
+    @include square(100%);
+    @include posi(0, 0);
   }
 }

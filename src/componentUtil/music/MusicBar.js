@@ -54,7 +54,7 @@ export default class MusicBar {
       this.canvasCtx.clearRect(0, 0, width, height);
       var array = this.getAudioDataArray(analyser);
       this.bar.forEach((bar, index) => {
-        bar.height = array[index * gutter];
+        bar.height = (array[index * gutter] * height) / 256;
       });
       this.bar.forEach(bar => this.drawRect(bar));
     };

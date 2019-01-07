@@ -1,6 +1,9 @@
 import { initRouter } from '../appUtil/router';
 import main from './main';
+import season from './season';
 
 const MainRoute = () => initRouter(main);
 
-export { MainRoute };
+const SeasonRoute = () => initRouter(season);
+
+export { MainRoute, SeasonRoute };

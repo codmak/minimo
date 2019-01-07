@@ -1,13 +1,13 @@
 .music-wrap-all {
   @include square(100%);
-  .season-row {
-    height: 50%;
-    .season-box {
-      flex: 0 0 50%;
-      @include size(50%, 100%);
-      canvas {
-        @include square(100%);
-      }
-    }
+  .mwa-box {
+    flex: auto;
+    width: 10px;
+    height: 100%;
+  }
+  .mwa-canvas {
+    @include square(100%);
+    @include posi(0, 0);
+    z-index: -1;
   }
 }

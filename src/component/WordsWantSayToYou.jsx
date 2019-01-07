@@ -1,12 +1,12 @@
 import React, { PureComponent } from 'react';
 import { Button } from 'antd';
 
-import CanvasTime from '../pageUtil/canvas/Time';
-import CanvasCenterText from '../pageUtil/canvas/Text';
-import steps from '../pageUtil/canvas/steps';
+import Time from '../componentUtil/wordsWantSayToYou/Time';
+import CenterText from '../componentUtil/wordsWantSayToYou/CenterText';
+import steps from '../componentUtil/wordsWantSayToYou/steps';
 import { createLoop } from '../util';
 
-class Canvas extends PureComponent {
+export default class WordsWantSayToYou extends PureComponent {
   constructor() {
     super();
     this.canvas = React.createRef();
@@ -27,13 +27,13 @@ class Canvas extends PureComponent {
 
     const ctx = canvas.getContext('2d');
 
-    this.paintings.time = new CanvasTime({
+    this.paintings.time = new Time({
       ctx,
       width,
       height
     });
 
-    this.paintings.text = new CanvasCenterText({
+    this.paintings.text = new CenterText({
       ctx,
       width,
       height
@@ -45,7 +45,7 @@ class Canvas extends PureComponent {
   render = () => {
     const { stepIndex } = this.state;
     return (
-      <div className="canvas-wrap">
+      <div className="wwsty-all">
         <canvas ref={this.canvas} />
         <Button
           className="prev"
@@ -202,5 +202,3 @@ class Canvas extends PureComponent {
     window.removeEventListener('resize', this.windowResize);
   };
 }
-
-export default Canvas;

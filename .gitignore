@@ -24,4 +24,4 @@ yarn-error.log*
 
 .idea
 
-assert/media
+/src/assert/media

@@ -46,6 +46,11 @@ export default [
       color: 'rgb(42,35,75)',
       center: true
     });
+    paintings.text.changeTextOption({
+      array: [],
+      color: [],
+      textSize: 100
+    });
   },
   paintings => {
     paintings.time.changeParticleInfo({ size: 4 });

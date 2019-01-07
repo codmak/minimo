@@ -1,6 +1,5 @@
 import Loading from '../routerPage/Loading';
-import Canvas from '../routerPage/Canvas';
-import Music from '../routerPage/Music';
+import Season from '../routerPage/Season';
 
 export default {
   basePath: '/',
@@ -12,13 +11,8 @@ export default {
       exact: false
     },
     {
-      path: 'canvas',
-      component: Canvas,
-      exact: false
-    },
-    {
-      path: 'music',
-      component: Music,
+      path: 'season',
+      component: Season,
       exact: false
     }
   ]

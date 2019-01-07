@@ -1,7 +1,7 @@
 import Base from './PaintingBase';
 import { getTimeStr } from '../../util';
 
-export default class CanvasTime extends Base {
+export default class Time extends Base {
   constructor(option, textOption) {
     option.particleInfo = {
       size: 0,
