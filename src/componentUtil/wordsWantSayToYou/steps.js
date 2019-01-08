@@ -1,16 +1,12 @@
 import { getBeforeText, getMusicText } from './data/say';
-import colors from './data/color';
+import { getTextColor } from './data/color';
 
 const beforeText = getBeforeText();
 const musicText = getMusicText();
 
-const getColor = () => {
-  return colors[Math.floor(Math.random() * colors.length)];
-};
-
 function createBeforeText(item) {
   return paintings => {
-    const color = getColor();
+    const color = getTextColor();
     paintings.time.changeTextOption({
       color: color[0]
     });
@@ -23,10 +19,7 @@ function createBeforeText(item) {
 
 function createMusicText(item) {
   return paintings => {
-    const color = getColor();
-    paintings.time.changeTextOption({
-      color: color[0]
-    });
+    const color = getTextColor();
     paintings.text.changeParticleInfo({ size: 4 });
     paintings.text.resetParticlePositon();
     paintings.text.changeTextOption({
@@ -43,7 +36,6 @@ export default [
     paintings.time.changeParticleInfo({ size: 6 });
     paintings.time.changeTextOption({
       textSize: 170,
-      color: 'rgb(42,35,75)',
       center: true
     });
     paintings.text.changeTextOption({
@@ -59,12 +51,13 @@ export default [
       color: 'rgb(157,210,231)',
       center: false
     });
+    let color = getTextColor();
     paintings.text.changeTextOption({
       array: ['想跟你说', '最甜的情话', '--by ACO'],
-      color: getColor(),
+      color: color,
       textSize: 100
     });
-  },
-  ...beforeText.map(item => createBeforeText(item)),
-  ...musicText.map(item => createMusicText(item))
+  }
+  // ...beforeText.map(item => createBeforeText(item)),
+  // ...musicText.map(item => createMusicText(item))
 ];

@@ -52,11 +52,10 @@ export default class Base {
       particleInfo: { size, number, random }
     } = option;
 
-    const particles = [];
+    this.particles = [];
     for (let i = 0; i < number; i++) {
-      particles.push(new Particle(width, height, size, random));
+      this.particles.push(new Particle({ width, height, size, random }));
     }
-    option.particles = particles;
 
     this.option = option;
   }
@@ -103,7 +102,10 @@ export default class Base {
   }
 
   particleText(checkImageData, gutter = 4) {
-    const { width, height, particles } = this.option;
+    const {
+      option: { width, height },
+      particles
+    } = this;
     // 获取图片中有文字的区域
     const pxls = [];
     for (let w = 0; w < width; w += gutter) {
@@ -142,7 +144,8 @@ export default class Base {
     const {
       mouse,
       key: { rebound },
-      option: { width, height, constant, consume, particles }
+      option: { width, height, constant, consume },
+      particles
     } = this;
     for (let i = 0, l = particles.length; i < l; i++) {
       const point = particles[i];
@@ -190,7 +193,8 @@ export default class Base {
   freshPointInfo(paint, checkImageData, gutter = 4) {
     const {
       key: { explode },
-      option: { ctx, width, height, particles }
+      option: { ctx, width, height },
+      particles
     } = this;
     ctx.clearRect(0, 0, width, height);
 
@@ -208,12 +212,12 @@ export default class Base {
   }
 
   draw() {
-    const { particles } = this.option;
+    const { particles } = this;
     particles.forEach(point => this.drawPoint(point));
   }
 
   resetExplode() {
-    const { particles } = this.option;
+    const { particles } = this;
     particles.forEach(point => {
       point.pVelocityX = point.velocityX;
       point.pVelocityY = point.velocityY;
@@ -240,7 +244,7 @@ export default class Base {
   }
 
   changeParticleInfo(particleInfo) {
-    this.option.particles.forEach(particle => {
+    this.particles.forEach(particle => {
       if ('size' in particleInfo) {
         particle.changesize(particleInfo.size);
       }
@@ -248,7 +252,7 @@ export default class Base {
   }
 
   resetParticlePositon() {
-    this.option.particles.forEach(particle => {
+    this.particles.forEach(particle => {
       particle.resetPosition();
     });
   }

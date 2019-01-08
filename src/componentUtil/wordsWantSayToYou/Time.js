@@ -5,7 +5,7 @@ export default class Time extends Base {
   constructor(option, textOption) {
     option.particleInfo = {
       size: 0,
-      number: 800
+      number: 800,
     };
     super(option);
     this.textOption = textOption || {};
@@ -31,7 +31,7 @@ export default class Time extends Base {
           ctx.fillText(
             text,
             width - ctx.measureText(text).width - 10,
-            height - textSize / 2
+            height - textSize / 2 - 70
           );
         }
       },

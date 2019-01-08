@@ -1,6 +1,7 @@
 export default class Particle {
-  constructor(width, height, size, random) {
+  constructor(option) {
     const range = Math.random() * 360;
+    const { width, height, size, random } = option;
 
     this.width = width;
     this.height = height;
@@ -15,7 +16,7 @@ export default class Particle {
     this.pColor = {
       ...this.color
     };
-    this.deltaC = 0.1;
+    this.deltaC = 0.05;
 
     // 移动速率
     this.deltaX = 0.25;

@@ -16,7 +16,9 @@
     }
   }
   .awa-canvas {
-    @include square(100%);
-    @include posi(0, 0);
+    @include square(300px);
+    @include posi(50%, 50%);
+    transform: translate3d(-50%, -50%, 0);
+    z-index: -1;
   }
 }

@@ -4,12 +4,13 @@ import { Button } from 'antd';
 import Time from '../componentUtil/wordsWantSayToYou/Time';
 import CenterText from '../componentUtil/wordsWantSayToYou/CenterText';
 import steps from '../componentUtil/wordsWantSayToYou/steps';
+import { getTimeColor } from '../componentUtil/wordsWantSayToYou/data/color';
 import { createLoop } from '../util';
 
 export default class WordsWantSayToYou extends PureComponent {
   constructor() {
     super();
-    this.canvas = React.createRef();
+    this.canvasRef = React.createRef();
     this.paintings = {};
     this.loop = null;
     this.steps = steps;
@@ -19,19 +20,24 @@ export default class WordsWantSayToYou extends PureComponent {
   }
 
   componentDidMount = () => {
-    const canvas = this.canvas.current;
-    const { width, height } = this.canvas.current.getBoundingClientRect();
+    const canvas = this.canvasRef.current;
+    const { width, height } = this.canvasRef.current.getBoundingClientRect();
 
     canvas.width = width;
     canvas.height = height;
 
     const ctx = canvas.getContext('2d');
 
-    this.paintings.time = new Time({
-      ctx,
-      width,
-      height
-    });
+    this.paintings.time = new Time(
+      {
+        ctx,
+        width,
+        height
+      },
+      {
+        color: getTimeColor()
+      }
+    );
 
     this.paintings.text = new CenterText({
       ctx,
@@ -46,7 +52,7 @@ export default class WordsWantSayToYou extends PureComponent {
     const { stepIndex } = this.state;
     return (
       <div className="wwsty-all">
-        <canvas ref={this.canvas} />
+        <canvas ref={this.canvasRef} />
         <Button
           className="prev"
           type="primary"
@@ -96,6 +102,12 @@ export default class WordsWantSayToYou extends PureComponent {
 
     this.loop.start();
     this.initEvent();
+
+    setInterval(() => {
+      this.paintings.time.changeTextOption({
+        color: getTimeColor()
+      });
+    }, 3000);
 
     steps[0](this.paintings);
   };
@@ -170,8 +182,8 @@ export default class WordsWantSayToYou extends PureComponent {
 
   windowResize = e => {
     const { width, height } = document.body.getBoundingClientRect();
-    this.canvas.current.width = width;
-    this.canvas.current.height = height;
+    this.canvasRef.current.width = width;
+    this.canvasRef.current.height = height;
     Object.entries(this.paintings).forEach(([key, value]) => {
       value.resetSize({ width, height });
     });
@@ -183,7 +195,7 @@ export default class WordsWantSayToYou extends PureComponent {
   };
 
   initEvent = () => {
-    const canvas = this.canvas.current;
+    const canvas = this.canvasRef.current;
     canvas.addEventListener('mousedown', this.mouseDown);
     canvas.addEventListener('mousemove', this.mouseMove);
     document.addEventListener('mouseup', this.mouseUp);
@@ -193,7 +205,7 @@ export default class WordsWantSayToYou extends PureComponent {
   };
 
   removeEvent = () => {
-    const canvas = this.canvas.current;
+    const canvas = this.canvasRef.current;
     canvas.removeEventListener('mousedown', this.mouseDown);
     canvas.removeEventListener('mousemove', this.mouseMove);
     document.removeEventListener('mouseup', this.mouseUp);

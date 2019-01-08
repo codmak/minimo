@@ -39,12 +39,6 @@ export default class Music extends PureComponent {
     });
   }
 
-  setSetp = step => {
-    this.setState({
-      step
-    });
-  };
-
   initAudio = () => {
     if (!this.audioCtx) {
       this.audioCtx = new AudioContext();
@@ -54,13 +48,13 @@ export default class Music extends PureComponent {
       let audios = [...document.getElementsByClassName('play-audio')];
       audios.forEach(element => {
         element.addEventListener('play', e => {
+          console.log('play');
           try {
             this.source = this.audioCtx.createMediaElementSource(e.target);
           } catch (e) {
             console.log(e);
           }
           this.source.connect(this.analyser);
-          console.log(123123)
           this.stopVisible = this.musicBar.audioVisible(this.analyser);
         });
         element.addEventListener('pause', e => {
@@ -70,16 +64,7 @@ export default class Music extends PureComponent {
     }
   };
 
-  playNext = () => {
-    const { step } = this.state;
-    let index = seasons.indexOf(step);
-    if (index !== -1) {
-      this.setSetp(seasons[(index + 1) % 4]);
-    }
-  };
-
   render = () => {
-    const { step } = this.state;
     return (
       <div className="music-wrap-all x-row p-r" onClick={this.initAudio}>
         <canvas className="mwa-canvas p-a" ref={this.canvasRef} />
@@ -87,36 +72,28 @@ export default class Music extends PureComponent {
           <AudioBreath
             audio="http://cdn.acohome.cn/spring.mp3"
             id="spring"
-            play={step === 'spring'}
-            setSetp={this.setSetp}
-            playNext={this.playNext}
+            next="summer"
           />
         </div>
         <div className="mwa-box">
           <AudioBreath
             audio="http://cdn.acohome.cn/summer.flac"
             id="summer"
-            play={step === 'summer'}
-            setSetp={this.setSetp}
-            playNext={this.playNext}
+            next="autumn"
           />
         </div>
         <div className="mwa-box">
           <AudioBreath
             audio="http://cdn.acohome.cn/autumn.mp3"
             id="autumn"
-            play={step === 'autumn'}
-            setSetp={this.setSetp}
-            playNext={this.playNext}
+            next="winter"
           />
         </div>
         <div className="mwa-box">
           <AudioBreath
             audio="http://cdn.acohome.cn/winter.mp3"
             id="winter"
-            play={step === 'winter'}
-            setSetp={this.setSetp}
-            playNext={this.playNext}
+            next="spring"
           />
         </div>
       </div>

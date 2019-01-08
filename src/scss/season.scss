@@ -1,9 +1,10 @@
 .all-about-you {
   @include square(100%);
   .aay-top {
-    @include size(100%, calc(100% - 80px));
+    @include size(100%, 100%);
   }
   .aay-music-wrap {
     @include size(100%, 80px);
+    @include posi(null, 0, 0);
   }
 }

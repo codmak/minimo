@@ -7,7 +7,7 @@ class Season extends PureComponent {
   render = () => {
     return (
       <div className="all-about-you">
-        <div className="aay-top p-r">
+        <div className="aay-top">
           <SeasonRoute />
         </div>
         <div className="aay-music-wrap">

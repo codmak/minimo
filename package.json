@@ -4,6 +4,8 @@
   "private": true,
   "dependencies": {
     "antd": "^3.11.0",
+    "events": "^3.0.0",
+    "hex-rgb": "^3.0.0",
     "node-sass": "^4.10.0",
     "ramda": "^0.26.1",
     "react": "^16.6.3",
