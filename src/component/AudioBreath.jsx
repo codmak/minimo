@@ -102,7 +102,7 @@ export default class Audio extends PureComponent {
           </svg>
           <Motion
             defaultStyle={{ x: 0 }}
-            style={{ x: spring(palyState === 3 ? 50 : 50) }}
+            style={{ x: spring(palyState === 3 ? 50 : 0) }}
           >
             {value => (
               <svg

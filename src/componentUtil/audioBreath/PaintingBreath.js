@@ -29,8 +29,9 @@ export default class PaintingBreath {
     this.stopTimer = null;
   }
 
-  drawCircle(circle, color) {
+  drawCircle(circle, prevCircle, color) {
     const { ctx, width, height } = this.option;
+    console.log(circle.angle, prevCircle.angle);
     if (!circle.show) return;
     ctx.fillStyle = `rgba(${color.red},${color.green},${color.blue},${(1 *
       (90 - circle.angle)) /
@@ -39,7 +40,7 @@ export default class PaintingBreath {
     ctx.arc(
       width / 2,
       height / 2,
-      Math.abs(circle.radius * Math.sin(circle.angle * (Math.PI / 180))),
+      Math.abs(circle.radius * Math.sin(80 * (Math.PI / 180))),
       0,
       Math.PI * 2,
       true
@@ -47,6 +48,21 @@ export default class PaintingBreath {
 
     ctx.closePath();
     ctx.fill();
+
+    ctx.fillStyle = `rgba(0,0,0,0)`;
+    ctx.beginPath();
+    ctx.arc(
+      width / 2,
+      height / 2,
+      Math.abs(circle.radius * Math.sin(45 * (Math.PI / 180))),
+      0,
+      Math.PI * 2,
+      true
+    );
+
+    ctx.closePath();
+    ctx.fill();
+
     circle.angle += 0.2;
     if (circle.angle > 90) {
       circle.angle = 0;
@@ -71,19 +87,27 @@ export default class PaintingBreath {
       drawNew
     } = this;
     ctx.clearRect(0, 0, width, height);
-    if (drawNew && circles[this.startIndex].angle > gutter) {
-      this.startIndex = (this.startIndex + 1) % number;
-      circles[this.startIndex].show = true;
-    }
-    circles.forEach((circle, index) =>
-      this.drawCircle(circle, colors[index % colors.length])
-    );
+    // if (drawNew && circles[this.startIndex].angle > gutter) {
+    //   this.startIndex = (this.startIndex + 1) % number;
+    //   circles[this.startIndex].show = true;
+    // }
+    this.drawCircle(circles[0], circles[0], colors[0]);
+    // circles.forEach((circle, index) =>
+    //   this.drawCircle(
+    //     circle,
+    //     circles[(index + circles.length) % circles.length],
+    //     colors[index % colors.length]
+    //   )
+    // );
   }
 
   start() {
     const { circles } = this;
     this.drawNew = true;
     circles[0].show = true;
+    setTimeout(() => {
+      circles[1].show = true;
+    }, 100);
     if (!this.loop) {
       this.loop = createLoop(() => this.painting());
     }

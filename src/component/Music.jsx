@@ -46,21 +46,21 @@ export default class Music extends PureComponent {
       this.analyser.fftSize = 4096;
       this.analyser.connect(this.audioCtx.destination);
       let audios = [...document.getElementsByClassName('play-audio')];
-      audios.forEach(element => {
-        element.addEventListener('play', e => {
-          console.log('play');
-          try {
-            this.source = this.audioCtx.createMediaElementSource(e.target);
-          } catch (e) {
-            console.log(e);
-          }
-          this.source.connect(this.analyser);
-          this.stopVisible = this.musicBar.audioVisible(this.analyser);
-        });
-        element.addEventListener('pause', e => {
-          this.stopVisible();
-        });
-      });
+      // audios.forEach(element => {
+      //   element.addEventListener('play', e => {
+      //     console.log('play');
+      //     try {
+      //       this.source = this.audioCtx.createMediaElementSource(e.target);
+      //     } catch (e) {
+      //       console.log(e);
+      //     }
+      //     this.source.connect(this.analyser);
+      //     this.stopVisible = this.musicBar.audioVisible(this.analyser);
+      //   });
+      //   element.addEventListener('pause', e => {
+      //     this.stopVisible();
+      //   });
+      // });
     }
   };
 
