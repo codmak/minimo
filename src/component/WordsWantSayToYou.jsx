@@ -35,15 +35,24 @@ export default class WordsWantSayToYou extends PureComponent {
         height
       },
       {
-        color: getTimeColor()
+        textSize: 170,
+        color: getTimeColor(),
+        center: true
       }
     );
 
-    this.paintings.text = new CenterText({
-      ctx,
-      width,
-      height
-    });
+    this.paintings.text = new CenterText(
+      {
+        ctx,
+        width,
+        height
+      },
+      {
+        array: ['想跟你说', '最甜的情话', '--by ACO'],
+        color: ['#000'],
+        textSize: 100
+      }
+    );
 
     this.init();
   };
@@ -91,29 +100,23 @@ export default class WordsWantSayToYou extends PureComponent {
 
   init = () => {
     const { steps } = this;
-    // const values = Object.values(this.paintings);
-    // values.forEach(value => value.freshPointInfo());
-    // values.forEach(value => value.draw());
+    // this.paintings.time.freshPointInfo();
     this.loop = createLoop(() => {
-      const values = Object.values(this.paintings);
-      values.forEach(value => value.freshPointInfo());
-      values.forEach(value => value.draw());
+      this.paintings.time.painting();
+      this.paintings.text.painting();
+      this.paintings.time.draw();
+      this.paintings.text.draw();
     });
 
     this.loop.start();
     this.initEvent();
-
-    setInterval(() => {
-      this.paintings.time.changeTextOption({
-        color: getTimeColor()
-      });
-    }, 3000);
 
     steps[0](this.paintings);
   };
 
   mouseDown = e => {
     Object.entries(this.paintings).forEach(([key, value]) => {
+      value.resetExplode();
       value.setMouse({
         x: e.pageX,
         y: e.pageY
@@ -135,7 +138,6 @@ export default class WordsWantSayToYou extends PureComponent {
 
   mouseUp = () => {
     Object.entries(this.paintings).forEach(([key, value]) => {
-      value.resetExplode();
       value.setKeys({
         explode: false
       });

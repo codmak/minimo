@@ -20,13 +20,9 @@ function createBeforeText(item) {
 function createMusicText(item) {
   return paintings => {
     const color = getTextColor();
-    paintings.text.changeParticleInfo({ size: 4 });
-    paintings.text.resetParticlePositon();
     paintings.text.changeTextOption({
       array: item.text,
-      color,
-      textSize: 70,
-      gutter: 3
+      color
     });
   };
 }
@@ -57,7 +53,7 @@ export default [
       color: color,
       textSize: 100
     });
-  }
-  // ...beforeText.map(item => createBeforeText(item)),
-  // ...musicText.map(item => createMusicText(item))
+  },
+  ...beforeText.map(item => createBeforeText(item)),
+  ...musicText.map(item => createMusicText(item))
 ];

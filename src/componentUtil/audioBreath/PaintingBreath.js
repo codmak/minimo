@@ -3,14 +3,16 @@ import { createLoop } from '../../util';
 import hexRgb from 'hex-rgb';
 
 const colors = [
+  '#f5b8cf',
   '#aeecf8',
   '#dca3c9',
   '#dc6a77',
-  '#f1a0bb',
-  '#f5b8cf',
   '#e3e9d8',
+  '#f1a0bb',
   '#c5d6c5'
 ].map(item => hexRgb(item));
+
+const getSizeByAngle = angle => Math.sqrt(Math.sin(angle * (Math.PI / 180)));
 
 export default class PaintingBreath {
   constructor(option) {
@@ -29,41 +31,57 @@ export default class PaintingBreath {
     this.stopTimer = null;
   }
 
-  drawCircle(circle, prevCircle, color) {
+  drawCircle(circle, nextCircle, color) {
     const { ctx, width, height } = this.option;
-    console.log(circle.angle, prevCircle.angle);
     if (!circle.show) return;
-    ctx.fillStyle = `rgba(${color.red},${color.green},${color.blue},${(1 *
-      (90 - circle.angle)) /
-      90})`;
+    let nowSize = Math.abs(circle.radius * getSizeByAngle(circle.angle));
+    let nextSize = Math.abs(
+      nextCircle.radius * getSizeByAngle(nextCircle.angle)
+    );
+    let gradient = ctx.createRadialGradient(
+      width / 2,
+      height / 2,
+      nowSize,
+      width / 2,
+      height / 2,
+      nextSize
+    );
+    let opacity = (1 * (80 - circle.angle)) / 90;
+    gradient.addColorStop(
+      0,
+      `rgba(${color.red},${color.green},${color.blue},${opacity})`
+    );
+    gradient.addColorStop(
+      1,
+      `rgba(${color.red},${color.green},${color.blue},${
+        opacity > 0.3 ? opacity - 0.3 : 0
+      })`
+    );
+    ctx.fillStyle = gradient;
     ctx.beginPath();
+
     ctx.arc(
       width / 2,
       height / 2,
-      Math.abs(circle.radius * Math.sin(80 * (Math.PI / 180))),
+      Math.abs(circle.radius * getSizeByAngle(circle.angle)),
       0,
       Math.PI * 2,
       true
     );
 
-    ctx.closePath();
-    ctx.fill();
-
-    ctx.fillStyle = `rgba(0,0,0,0)`;
-    ctx.beginPath();
     ctx.arc(
       width / 2,
       height / 2,
-      Math.abs(circle.radius * Math.sin(45 * (Math.PI / 180))),
-      0,
+      Math.abs(nextCircle.radius * getSizeByAngle(nextCircle.angle)),
       Math.PI * 2,
-      true
+      0,
+      false
     );
 
     ctx.closePath();
     ctx.fill();
 
-    circle.angle += 0.2;
+    circle.angle += 0.1;
     if (circle.angle > 90) {
       circle.angle = 0;
       circle.show = false;
@@ -87,27 +105,23 @@ export default class PaintingBreath {
       drawNew
     } = this;
     ctx.clearRect(0, 0, width, height);
-    // if (drawNew && circles[this.startIndex].angle > gutter) {
-    //   this.startIndex = (this.startIndex + 1) % number;
-    //   circles[this.startIndex].show = true;
-    // }
-    this.drawCircle(circles[0], circles[0], colors[0]);
-    // circles.forEach((circle, index) =>
-    //   this.drawCircle(
-    //     circle,
-    //     circles[(index + circles.length) % circles.length],
-    //     colors[index % colors.length]
-    //   )
-    // );
+    if (drawNew && circles[this.startIndex].angle > gutter) {
+      this.startIndex = (this.startIndex + 1) % number;
+      circles[this.startIndex].show = true;
+    }
+    circles.forEach((circle, index) =>
+      this.drawCircle(
+        circle,
+        circles[(index + circles.length + 1) % circles.length],
+        colors[index % colors.length]
+      )
+    );
   }
 
   start() {
     const { circles } = this;
     this.drawNew = true;
-    circles[0].show = true;
-    setTimeout(() => {
-      circles[1].show = true;
-    }, 100);
+    circles[this.startIndex].show = true;
     if (!this.loop) {
       this.loop = createLoop(() => this.painting());
     }

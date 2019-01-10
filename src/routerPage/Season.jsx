@@ -11,7 +11,7 @@ class Season extends PureComponent {
           <SeasonRoute />
         </div>
         <div className="aay-music-wrap">
-          <Music />
+          {/* <Music /> */}
         </div>
       </div>
     );

@@ -1,45 +1,46 @@
+import { mergeDeepRight } from 'ramda';
 import Base from './PaintingBase';
+
+const mergeOption = mergeDeepRight({
+  textSize: 170,
+  gutter: 5
+});
 
 export default class CenterText extends Base {
   constructor(option, textOption) {
     option.particleInfo = {
       size: 6,
-      number: 13000
+      number: 4000
     };
     super(option);
-    this.textOption = textOption || {
-      textSize: 170,
-      gutter: 4
-    };
+    this.textOption = mergeOption(textOption);
   }
 
-  freshPointInfo() {
-    const { array, color, textSize, gutter } = this.textOption;
-    if (!array) return;
-    return super.freshPointInfo(
-      (ctx, width, height) => {
-        ctx.textBaseline = 'middle';
-        ctx.font = `${textSize}px 'Courier'`;
-        array.forEach((str, index) => {
-          ctx.fillStyle = color[index % color.length];
-          ctx.fillText(
-            str,
-            (width - ctx.measureText(str).width) / 2,
-            height / 2 + (index - (array.length - 1) / 2) * (textSize + 10)
-          );
-        });
-      },
-      (imgData, index) => {
-        return imgData.data[index] !== 0
-          ? [
-              imgData.data[index],
-              imgData.data[index + 1],
-              imgData.data[index + 2]
-            ]
-          : null;
-      },
-      gutter
-    );
+  paintingText() {
+    const { ctx, width, height } = this.option;
+    const { color, textSize, array } = this.textOption;
+
+    ctx.textBaseline = 'middle';
+    ctx.font = `${textSize}px 'Courier'`;
+    array.forEach((str, index) => {
+      ctx.fillStyle = color[index % color.length];
+      ctx.fillText(
+        str,
+        (width - ctx.measureText(str).width) / 2,
+        height / 2 + (index - (array.length - 1) / 2) * (textSize + 30)
+      );
+    });
+  }
+
+  checkImageData(imgData, index) {
+    return imgData.data[index + 3] !== 0
+      ? [imgData.data[index], imgData.data[index + 1], imgData.data[index + 2]]
+      : null;
+  }
+
+  painting() {
+    const { gutter } = this.textOption;
+    super.painting(gutter);
   }
 
   changeTextOption(textOption) {

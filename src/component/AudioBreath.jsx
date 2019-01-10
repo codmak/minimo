@@ -118,7 +118,7 @@ export default class Audio extends PureComponent {
           <audio
             className="play-audio"
             controls
-            src={music} //audio
+            src={audio} //music
             crossOrigin="anonymous"
             ref={this.audioRef}
           />
