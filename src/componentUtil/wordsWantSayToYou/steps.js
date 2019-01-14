@@ -44,14 +44,13 @@ export default [
     paintings.time.changeParticleInfo({ size: 4 });
     paintings.time.changeTextOption({
       textSize: 70,
-      color: 'rgb(157,210,231)',
       center: false
     });
     let color = getTextColor();
     paintings.text.changeTextOption({
       array: ['想跟你说', '最甜的情话', '--by ACO'],
       color: color,
-      textSize: 100
+      textSize: 120
     });
   },
   ...beforeText.map(item => createBeforeText(item)),

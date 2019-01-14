@@ -25,3 +25,5 @@ yarn-error.log*
 .idea
 
 /src/assert/media
+
+/src/**/**/data

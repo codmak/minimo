@@ -1,11 +1,7 @@
-export default class Point {
+export default class Particle {
   constructor(option) {
     const range = Math.random() * 360;
     const { width, height, size, random } = option;
-
-    this.width = width;
-    this.height = height;
-    this.random = random;
 
     this.color = {
       r: 255,
@@ -16,11 +12,10 @@ export default class Point {
     this.pColor = {
       ...this.color
     };
-    this.deltaC = 0.05;
+    this.deltaC = 0.1;
 
     // 移动速率
-    this.deltaX = 0.5;
-    this.deltaY = 0.5;
+    this.delta = 0.2;
 
     // 开始的位置
     this.x = width / 2 + (Math.cos(range) * Math.random() * width) / 2;
@@ -36,11 +31,14 @@ export default class Point {
     // 圆点是否形成文字
     this.needDraw = false;
 
+    // 轨迹位置
     this.pathQueeu = new Queue(5, [this.x, this.y]);
+
+    this.option = option;
   }
 
   changesize(size) {
-    this.size = (this.random ? Math.random() : 1) * size;
+    this.size = (this.option.random ? Math.random() : 1) * size;
     this.origSize = this.size;
   }
 }

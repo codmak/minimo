@@ -2,8 +2,6 @@ import React, { PureComponent } from 'react';
 import AudioBreath from './AudioBreath';
 import MusicBar from '../componentUtil/music/MusicBar';
 
-const seasons = ['spring', 'summer', 'autumn', 'winter'];
-
 export default class Music extends PureComponent {
   constructor() {
     super();

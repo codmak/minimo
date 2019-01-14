@@ -4,7 +4,6 @@ import { Button } from 'antd';
 import Time from '../componentUtil/wordsWantSayToYou/Time';
 import CenterText from '../componentUtil/wordsWantSayToYou/CenterText';
 import steps from '../componentUtil/wordsWantSayToYou/steps';
-import { getTimeColor } from '../componentUtil/wordsWantSayToYou/data/color';
 import { createLoop } from '../util';
 
 export default class WordsWantSayToYou extends PureComponent {
@@ -33,11 +32,6 @@ export default class WordsWantSayToYou extends PureComponent {
         ctx,
         width,
         height
-      },
-      {
-        textSize: 170,
-        color: getTimeColor(),
-        center: true
       }
     );
 
@@ -46,11 +40,6 @@ export default class WordsWantSayToYou extends PureComponent {
         ctx,
         width,
         height
-      },
-      {
-        array: ['想跟你说', '最甜的情话', '--by ACO'],
-        color: ['#000'],
-        textSize: 100
       }
     );
 
@@ -100,7 +89,10 @@ export default class WordsWantSayToYou extends PureComponent {
 
   init = () => {
     const { steps } = this;
-    // this.paintings.time.freshPointInfo();
+    // this.paintings.time.painting();
+    // this.paintings.text.painting();
+    // this.paintings.time.draw();
+    // this.paintings.text.draw();
     this.loop = createLoop(() => {
       this.paintings.time.painting();
       this.paintings.text.painting();
