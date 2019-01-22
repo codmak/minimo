@@ -8,6 +8,5 @@
   .mwa-canvas {
     @include square(100%);
     @include posi(0, 0);
-    z-index: -1;
   }
 }

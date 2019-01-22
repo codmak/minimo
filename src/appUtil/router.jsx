@@ -1,23 +1,25 @@
 import React from 'react';
-import {Route, Switch, Redirect} from 'react-router-dom';
-import { BrowserRouter, HashRouter } from 'react-router-dom';
+import {
+  BrowserRouter,
+  HashRouter,
+  Route,
+  Switch,
+  Redirect
+} from 'react-router-dom';
 
-export function initRouter(config) {
+export function initRouter(config, props) {
   return (
-    <Switch>
-      {
-        config.children.map((route, index) => {
-            let routeCopy = {
-              ...route,
-              path: config.basePath + route.path
-            };
-            return <Route {...routeCopy} key={index}/>;
-          }
-        )
-      }
-      {
-        config.defaultPath ? <Redirect to={config.basePath + config.defaultPath}/> : null
-      }
+    <Switch {...props}>
+      {config.children.map((route, index) => {
+        let routeCopy = {
+          ...route,
+          path: config.basePath + route.path
+        };
+        return <Route {...routeCopy} key={index} />;
+      })}
+      {config.defaultPath ? (
+        <Redirect to={config.basePath + config.defaultPath} />
+      ) : null}
     </Switch>
   );
 }

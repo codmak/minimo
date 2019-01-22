@@ -53,6 +53,6 @@ export default [
       textSize: 120
     });
   },
-  ...beforeText.map(item => createBeforeText(item)),
-  ...musicText.map(item => createMusicText(item))
+  // ...beforeText.map(item => createBeforeText(item)),
+  // ...musicText.map(item => createMusicText(item))
 ];

@@ -2,8 +2,8 @@ import { initRouter } from '../appUtil/router';
 import main from './main';
 import season from './season';
 
-const MainRoute = () => initRouter(main);
+const MainRoute = props => initRouter(main, props);
 
-const SeasonRoute = () => initRouter(season);
+const SeasonRoute = props => initRouter(season, props);
 
 export { MainRoute, SeasonRoute };

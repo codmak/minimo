@@ -1,9 +1,6 @@
 .wwsty-all {
-  @include posi(0, 0);
-  @include square(100%);
-  transition: 0.4s;
+  height: 100%;
   > canvas {
-    @include posi(0, 0);
     @include square(100%);
   }
   .next {

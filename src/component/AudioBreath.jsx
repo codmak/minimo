@@ -44,6 +44,7 @@ export default class Audio extends PureComponent {
   };
 
   componentWillUnmount = () => {
+    console.log(123123)
     this.audio.removeEventListener('ended', this.playEnd);
     this.audio.removeEventListener('play', this.paintingStart);
     this.audio.removeEventListener('pause', this.paintingStop);

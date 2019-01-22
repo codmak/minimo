@@ -1,4 +1,5 @@
 import React, { PureComponent } from 'react';
+import { Link } from 'react-router-dom';
 import AudioBreath from './AudioBreath';
 import MusicBar from '../componentUtil/music/MusicBar';
 
@@ -46,7 +47,6 @@ export default class Music extends PureComponent {
       let audios = [...document.getElementsByClassName('play-audio')];
       audios.forEach(element => {
         element.addEventListener('play', e => {
-          console.log('play');
           try {
             this.source = this.audioCtx.createMediaElementSource(e.target);
           } catch (e) {
@@ -67,32 +67,40 @@ export default class Music extends PureComponent {
       <div className="music-wrap-all x-row p-r" onClick={this.initAudio}>
         <canvas className="mwa-canvas p-a" ref={this.canvasRef} />
         <div className="mwa-box">
-          <AudioBreath
-            audio="http://cdn.acohome.cn/spring.mp3"
-            id="spring"
-            next="summer"
-          />
+          <Link to="/season/spring" replace>
+            <AudioBreath
+              audio="http://cdn.acohome.cn/spring.mp3"
+              id="spring"
+              next="summer"
+            />
+          </Link>
         </div>
         <div className="mwa-box">
-          <AudioBreath
-            audio="http://cdn.acohome.cn/summer.flac"
-            id="summer"
-            next="autumn"
-          />
+          <Link to="/season/summer" replace>
+            <AudioBreath
+              audio="http://cdn.acohome.cn/summer.flac"
+              id="summer"
+              next="autumn"
+            />
+          </Link>
         </div>
         <div className="mwa-box">
-          <AudioBreath
-            audio="http://cdn.acohome.cn/autumn.mp3"
-            id="autumn"
-            next="winter"
-          />
+          <Link to="/season/autumn" replace>
+            <AudioBreath
+              audio="http://cdn.acohome.cn/autumn.mp3"
+              id="autumn"
+              next="winter"
+            />
+          </Link>
         </div>
         <div className="mwa-box">
-          <AudioBreath
-            audio="http://cdn.acohome.cn/winter.mp3"
-            id="winter"
-            next="spring"
-          />
+          <Link to="/season/winter" replace>
+            <AudioBreath
+              audio="http://cdn.acohome.cn/winter.mp3"
+              id="winter"
+              next="spring"
+            />
+          </Link>
         </div>
       </div>
     );
