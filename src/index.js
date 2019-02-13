@@ -13,7 +13,7 @@ import 'antd/dist/antd.css';
 import './scss/index.scss';
 
 ReactDOM.render(
-  wrapComponent(<App />, [
+  wrapComponent(<App/>, [
     applyStore,
     applyRouter('hash'),
     applyLanguage('zh_cn')

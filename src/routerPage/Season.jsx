@@ -8,8 +8,8 @@ class Season extends PureComponent {
   render = () => {
     const { location } = this.props;
     return (
-      <div className="all-about-you">
-        <div className="aay-top">
+      <div className="season-all">
+        <div className="sa-top">
           <TransitionGroup>
             <CSSTransition
               key={location.pathname}
@@ -20,7 +20,7 @@ class Season extends PureComponent {
             </CSSTransition>
           </TransitionGroup>
         </div>
-        <div className="aay-music-wrap">
+        <div className="sa-music-wrap">
           <Music />
         </div>
       </div>

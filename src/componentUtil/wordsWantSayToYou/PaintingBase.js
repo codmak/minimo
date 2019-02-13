@@ -257,7 +257,7 @@ export default class Base {
   changeParticleInfo(particleInfo) {
     this.particles.forEach(particle => {
       if ('size' in particleInfo) {
-        particle.changesize(particleInfo.size);
+        particle.changeSize(particleInfo.size);
       }
     });
   }

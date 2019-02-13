@@ -1,22 +1,22 @@
-import React, { PureComponent } from 'react';
-import { Motion, spring } from 'react-motion';
-import { $on, $emit, $off } from '../util';
+import React, {PureComponent} from 'react';
+import {Motion, spring} from 'react-motion';
+import {$on, $emit, $off} from '../util';
 import PaintingBreath from '../componentUtil/audioBreath/PaintingBreath';
 
 import music from '../assert/media/summer.flac';
 
 export default class Audio extends PureComponent {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.audioRef = React.createRef();
     this.canvasRef = React.createRef();
     // 1: 暂停（还有内容） 2: 正在播放 3: 播放结束
     this.state = {
-      palyState: 1
+      playState: 1
     };
   }
 
-  componentDidMount = () => {
+  componentDidMount() {
     this.audio = this.audioRef.current;
     this.audio.addEventListener('ended', this.playEnd);
     this.audio.addEventListener('play', this.paintingStart);
@@ -25,7 +25,7 @@ export default class Audio extends PureComponent {
     $on('audioPlayNext', this.audioPlayNext);
 
     const canvas = this.canvasRef.current;
-    const { width, height } = this.canvasRef.current.getBoundingClientRect();
+    const {width, height} = this.canvasRef.current.getBoundingClientRect();
 
     canvas.width = width;
     canvas.height = height;
@@ -43,8 +43,7 @@ export default class Audio extends PureComponent {
     });
   };
 
-  componentWillUnmount = () => {
-    console.log(123123)
+  componentWillUnmount() {
     this.audio.removeEventListener('ended', this.playEnd);
     this.audio.removeEventListener('play', this.paintingStart);
     this.audio.removeEventListener('pause', this.paintingStop);
@@ -53,31 +52,31 @@ export default class Audio extends PureComponent {
   };
 
   togglePlay = () => {
-    const { palyState } = this.state;
-    const { id } = this.props;
+    const {playState} = this.state;
+    const {id} = this.props;
 
-    switch (palyState) {
+    switch (playState) {
       case 3:
       case 1:
         this.audio.play();
         $emit('audioPlay', id);
-        this.setState({ palyState: 2 });
+        this.setState({playState: 2});
         break;
       case 2:
         this.audio.pause();
-        this.setState({ palyState: 1 });
+        this.setState({playState: 1});
         break;
       default:
     }
   };
 
   playNext = () => {
-    const { next } = this.props;
+    const {next} = this.props;
     $emit('audioPlayNext', next);
   };
 
-  getIcon = palyState => {
-    switch (palyState) {
+  getIcon = playState => {
+    switch (playState) {
       case 1:
       case 3:
         return '#icon-bofang';
@@ -88,31 +87,31 @@ export default class Audio extends PureComponent {
   };
 
   render = () => {
-    const { audio } = this.props;
-    const { palyState } = this.state;
+    const {audio} = this.props;
+    const {playState} = this.state;
     return (
       <div className="audio-wrap-all p-r">
-        <canvas className="awa-canvas p-a" ref={this.canvasRef} />
+        <canvas className="awa-canvas p-a" ref={this.canvasRef}/>
         <div className="awa-wrap x-row">
           <svg
             className="awa-icon"
             aria-hidden="true"
             onClick={this.togglePlay}
           >
-            <use xlinkHref={this.getIcon(palyState)} />
+            <use xlinkHref={this.getIcon(playState)}/>
           </svg>
           <Motion
-            defaultStyle={{ x: 0 }}
-            style={{ x: spring(palyState === 3 ? 50 : 0) }}
+            defaultStyle={{x: 0}}
+            style={{x: spring(playState === 3 ? 50 : 0)}}
           >
             {value => (
               <svg
                 className="awa-icon"
                 aria-hidden="true"
-                style={{ width: value.x, height: value.x }}
+                style={{width: value.x, height: value.x}}
                 onClick={this.playNext}
               >
-                <use xlinkHref="#icon-xiayishou" />
+                <use xlinkHref="#icon-xiayishou"/>
               </svg>
             )}
           </Motion>
@@ -129,7 +128,7 @@ export default class Audio extends PureComponent {
   };
 
   playEnd = () => {
-    this.setState({ palyState: 3 });
+    this.setState({playState: 3});
   };
 
   paintingStart = () => {
@@ -141,21 +140,21 @@ export default class Audio extends PureComponent {
   };
 
   audioPlay = playId => {
-    const { id } = this.props;
+    const {id} = this.props;
     if (playId !== id) {
       this.audio.pause();
-      this.setState({ palyState: 1 });
+      this.setState({playState: 1});
     }
   };
 
   audioPlayNext = nextId => {
-    const { id } = this.props;
+    const {id} = this.props;
     if (nextId !== id) {
       this.audio.pause();
-      this.setState({ palyState: 1 });
+      this.setState({playState: 1});
     } else {
       this.audio.play();
-      this.setState({ palyState: 2 });
+      this.setState({playState: 2});
     }
   };
 }

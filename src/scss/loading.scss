@@ -1,0 +1,8 @@
+.loading {
+  height: 100%;
+
+  .canvas-wrap {
+    @include posi(0, 0);
+    @include square(100%);
+  }
+}

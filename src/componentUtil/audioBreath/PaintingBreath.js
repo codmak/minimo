@@ -1,5 +1,5 @@
 import Circle from './Circle';
-import { createLoop } from '../../util';
+import {createLoop} from '../../util';
 import hexRgb from 'hex-rgb';
 
 const colors = [
@@ -17,7 +17,7 @@ const getSizeByAngle = angle => Math.sqrt(Math.sin(angle * (Math.PI / 180)));
 export default class PaintingBreath {
   constructor(option) {
     const {
-      circleInfo: { number, maxSize }
+      circleInfo: {number, maxSize}
     } = option;
 
     this.circles = [];
@@ -32,7 +32,7 @@ export default class PaintingBreath {
   }
 
   drawCircle(circle, nextCircle, color) {
-    const { ctx, width, height } = this.option;
+    const {ctx, width, height} = this.option;
     if (!circle.show) return;
     let nowSize = Math.abs(circle.radius * getSizeByAngle(circle.angle));
     let nextSize = Math.abs(
@@ -55,7 +55,7 @@ export default class PaintingBreath {
       1,
       `rgba(${color.red},${color.green},${color.blue},${
         opacity > 0.3 ? opacity - 0.3 : 0
-      })`
+        })`
     );
     ctx.fillStyle = gradient;
     ctx.beginPath();
@@ -100,7 +100,7 @@ export default class PaintingBreath {
         ctx,
         width,
         height,
-        circleInfo: { number, gutter }
+        circleInfo: {number, gutter}
       },
       drawNew
     } = this;
@@ -119,7 +119,7 @@ export default class PaintingBreath {
   }
 
   start() {
-    const { circles } = this;
+    const {circles} = this;
     this.drawNew = true;
     circles[this.startIndex].show = true;
     if (!this.loop) {
@@ -132,7 +132,7 @@ export default class PaintingBreath {
   }
 
   stop() {
-    const { circles } = this;
+    const {circles} = this;
     this.drawNew = false;
 
     const close = () => {

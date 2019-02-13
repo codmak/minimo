@@ -1,7 +1,7 @@
 export default class Particle {
   constructor(option) {
     const range = Math.random() * 360;
-    const { width, height, size, random } = option;
+    const {width, height, size, random} = option;
 
     this.color = {
       r: 255,
@@ -37,7 +37,7 @@ export default class Particle {
     this.option = option;
   }
 
-  changesize(size) {
+  changeSize(size) {
     this.size = (this.option.random ? Math.random() : 1) * size;
     this.origSize = this.size;
   }
