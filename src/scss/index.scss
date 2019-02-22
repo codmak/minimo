@@ -1,4 +1,5 @@
 @import 'core/init';
+@import 'core/buttons';
 @import './app';
 @import './season';
 @import './wwsty';
@@ -7,4 +8,9 @@
 @import './music';
 @import './loading';
 @import './cake';
+@import './spring';
 
+.p-a-all {
+  @include posi(0, 0);
+  @include square(100%);
+}

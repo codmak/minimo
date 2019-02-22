@@ -1,23 +1,11 @@
-import { getBeforeText, getMusicText } from './data/say';
+import { getBeforeText, getMusicText, getPoemText } from './data/say';
 import { getTextColor } from './data/color';
 
 const beforeText = getBeforeText();
 const musicText = getMusicText();
+const poemText = getPoemText();
 
-function createBeforeText(item) {
-  return paintings => {
-    const color = getTextColor();
-    paintings.time.changeTextOption({
-      color: color[0]
-    });
-    paintings.text.changeTextOption({
-      array: item.text,
-      color: color
-    });
-  };
-}
-
-function createMusicText(item) {
+function createText(item) {
   return paintings => {
     const color = getTextColor();
     paintings.text.changeTextOption({
@@ -31,7 +19,7 @@ export default [
   paintings => {
     paintings.time.changeParticleInfo({ size: 6 });
     paintings.time.changeTextOption({
-      textSize: 170,
+      textSize: 150,
       center: true
     });
     paintings.text.changeTextOption({
@@ -48,11 +36,28 @@ export default [
     });
     let color = getTextColor();
     paintings.text.changeTextOption({
-      array: ['想跟你说', '最甜的情话', '--by ACO'],
+      array: ['和你说', '最甜的情话', '--by aco'],
+      color: color,
+      textSize: 100
+    });
+  },
+  // ...beforeText.map(createText),
+  // paintings => {
+  //   let color = getTextColor();
+  //   paintings.text.changeTextOption({
+  //     array: ['情话', '在乐评中'],
+  //     color: color,
+  //     textSize: 120
+  //   });
+  // },
+  // ...musicText.map(createText),
+  paintings => {
+    let color = getTextColor();
+    paintings.text.changeTextOption({
+      array: ['情话', '在诗里'],
       color: color,
       textSize: 120
     });
   },
-  // ...beforeText.map(item => createBeforeText(item)),
-  // ...musicText.map(item => createMusicText(item))
+  ...poemText.map(createText)
 ];

@@ -10,22 +10,22 @@ export default {
     {
       path: 'spring',
       component: Spring,
-      exact: false
+      exact: true
     },
     {
       path: 'summer',
       component: Summer,
-      exact: false
+      exact: true
     },
     {
       path: 'autumn',
       component: Autumn,
-      exact: false
+      exact: true
     },
     {
       path: 'winter',
       component: Winter,
-      exact: false
+      exact: true
     }
   ]
 };

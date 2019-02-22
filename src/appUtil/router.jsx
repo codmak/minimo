@@ -15,10 +15,11 @@ export function initRouter(config, props) {
           ...route,
           path: config.basePath + route.path
         };
-        return <Route {...routeCopy} key={index}/>;
+        return <Route {...routeCopy} key={index} />;
       })}
+
       {config.defaultPath ? (
-        <Redirect to={config.basePath + config.defaultPath}/>
+        <Redirect to={config.basePath + config.defaultPath} />
       ) : null}
     </Switch>
   );

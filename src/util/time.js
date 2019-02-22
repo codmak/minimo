@@ -1,19 +1,33 @@
+import dayjs from 'dayjs';
+
+const startDate = dayjs('2018-08-25T22:00+08:00');
+
 export function pad(number) {
   return ('0' + number).substr(-2);
 }
 
-export function getTimeStr(amPM) {
-  var date = new Date(),
-    hours = date.getHours();
+export function getTimeLong() {
+  let nowDate = dayjs();
+  let yearDiff = nowDate.diff(startDate, 'year');
+  let monthDiff = nowDate.diff(startDate, 'month');
+  let dayDiff = nowDate.diff(startDate, 'day');
+  let hourDiff = nowDate.diff(startDate, 'hour');
+  let minuteDiff = nowDate.diff(startDate, 'minute');
+  let secondDiff = nowDate.diff(startDate, 'second');
+  let lastMonth = nowDate
+    .subtract(1, 'month')
+    .set('date', startDate.date())
+    .set('hour', startDate.hour())
+    .set('minute', startDate.minute())
+    .set('second', startDate.second())
+    .set('millisecond', startDate.millisecond());
 
-  if (amPM) {
-    hours = hours > 12 ? (hours -= 12) : hours;
-    hours = hours === 0 ? 12 : hours;
-  } else {
-    hours = pad(hours);
-  }
-
-  var minutes = pad(date.getMinutes());
-  var seconds = pad(date.getSeconds());
-  return hours + ' : ' + minutes + ' : ' + seconds;
+  return [
+    yearDiff,
+    pad(monthDiff - yearDiff * 12),
+    pad(nowDate.diff(lastMonth, 'day')),
+    pad(hourDiff - dayDiff * 24),
+    pad(minuteDiff - hourDiff * 60),
+    pad(secondDiff - minuteDiff * 60)
+  ];
 }

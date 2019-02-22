@@ -36,9 +36,22 @@ export default class PaintingCake {
   drawSingleCake(cake) {
     const { ctx } = this.option;
 
+    let gradient = ctx.createRadialGradient(
+      cake.x,
+      cake.y,
+      0,
+      cake.x,
+      cake.y,
+      cake.size / 2
+    );
+
+    gradient.addColorStop(0, cake.color);
+    gradient.addColorStop(0.3, cake.color);
+    gradient.addColorStop(1, `rgba(255, 255, 255, 0)`);
+    ctx.fillStyle = gradient;
+
     ctx.beginPath();
     ctx.arc(cake.x, cake.y, cake.size / 2, 0, Math.PI * 2, true);
-    ctx.fillStyle = cake.color;
     ctx.closePath();
     ctx.fill();
 
@@ -101,7 +114,20 @@ export default class PaintingCake {
   start() {
     const { width } = this.option;
     this.loadImage(images).then(() => {
-      setInterval(() => {
+      // this.cakes.push(
+      //   new Cake({
+      //     image: this.cakeImages[random(57)],
+      //     size: 80,
+      //     color: getCakeColor(),
+      //     speedX: 20,
+      //     speedY: 20,
+      //     x: 100,
+      //     y: 100
+      //   })
+      // );
+      // this.draw();
+      clearTimeout(this.stopTimer);
+      this.intervalTimer = setInterval(() => {
         let length = this.cakeImages.length;
         this.cakes.push(
           new Cake({
@@ -115,13 +141,31 @@ export default class PaintingCake {
           })
         );
       }, 1000);
+      this.loop = createLoop(() => this.draw());
+      this.loop.start();
     });
-
-    this.loop = createLoop(() => this.draw());
-    this.loop.start();
   }
 
   stop() {
-    this.loop.stop();
+    this.stopTimer = setTimeout(() => {
+      this.loop.stop();
+    }, 5000);
+    clearInterval(this.intervalTimer);
+  }
+
+  more() {
+    const { width } = this.option;
+    let length = this.cakeImages.length;
+    this.cakes.push(
+      new Cake({
+        image: this.cakeImages[random(length)],
+        size: random(80, 30),
+        color: getCakeColor(),
+        speedX: random(50, -50),
+        speedY: random(50, -50),
+        x: random(width, 0),
+        y: -100
+      })
+    );
   }
 }

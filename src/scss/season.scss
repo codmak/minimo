@@ -3,30 +3,10 @@
 
   .sa-top {
     height: 100%;
-
     > div {
       height: 100%;
-
       .all {
-        @include posi(0, 0);
-        @include square(100%);
-      }
-
-      .season-wrap {
         height: 100%;
-        background-size: cover;
-
-        &.summer {
-          background-image: url(../assert/bg/summer.jpg);
-        }
-
-        &.autumn {
-          background-image: url(../assert/bg/autumn.jpg);
-        }
-
-        &.winter {
-          background-image: url(../assert/bg/winter.jpg);
-        }
       }
     }
   }

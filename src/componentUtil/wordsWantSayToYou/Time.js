@@ -1,10 +1,10 @@
 import Base from './PaintingBase';
 import { mergeDeepRight } from 'ramda';
-import { getTimeStr } from '../../util';
+import { getTimeLong } from '../../util';
 
 const mergeOption = mergeDeepRight({
   color: 'rgb(0, 0, 0)',
-  textSize: 170,
+  textSize: 150,
   center: true
 });
 
@@ -12,7 +12,7 @@ export default class Time extends Base {
   constructor(option, textOption) {
     option.particleInfo = {
       size: 6,
-      number: 1000
+      number: 1600
     };
     super(option);
     this.textOption = mergeOption(textOption || {});
@@ -21,8 +21,14 @@ export default class Time extends Base {
   paintingText() {
     const { ctx, width, height } = this.option;
     const { color, textSize, center } = this.textOption;
-    if (!color) return;
-    const text = getTimeStr();
+    const time = getTimeLong();
+    const text = `${time[0]}-${time[1]}-${time[2]} ${time[3]}:${time[4]}:${
+      time[5]
+    }`;
+
+    // 防止过多的资源消耗
+    if (this.beforeText === text) return true;
+    this.beforeText = text;
 
     ctx.fillStyle = color;
     ctx.textBaseline = 'middle';
@@ -34,7 +40,7 @@ export default class Time extends Base {
       ctx.fillText(
         text,
         width - ctx.measureText(text).width - 10,
-        height - textSize / 2 - 70
+        height - textSize / 2 - 10
       );
     }
   }

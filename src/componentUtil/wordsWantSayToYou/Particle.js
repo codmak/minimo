@@ -1,7 +1,9 @@
+import { random } from '../../util';
+
 export default class Particle {
   constructor(option) {
     const range = Math.random() * 360;
-    const {width, height, size, random} = option;
+    const { width, height, size, random: sizeRandom } = option;
 
     this.color = {
       r: 255,
@@ -10,6 +12,9 @@ export default class Particle {
       a: 0.4
     };
     this.pColor = {
+      ...this.color
+    };
+    this.dColor = {
       ...this.color
     };
     this.deltaC = 0.1;
@@ -21,11 +26,14 @@ export default class Particle {
     this.x = width / 2 + (Math.cos(range) * Math.random() * width) / 2;
     this.y = height / 2 + (Math.sin(range) * Math.random() * height) / 2;
 
+    this.dx = 0;
+    this.dy = 0;
+
     // 速度
     this.speedX = Math.floor(Math.random() * 10) - 5;
     this.speedY = Math.floor(Math.random() * 10) - 5;
 
-    this.size = (random ? Math.random() : 1) * size;
+    this.size = sizeRandom ? random(size, 1, true) : size;
     this.origSize = this.size;
 
     // 圆点是否形成文字
@@ -38,7 +46,7 @@ export default class Particle {
   }
 
   changeSize(size) {
-    this.size = (this.option.random ? Math.random() : 1) * size;
+    this.size = this.option.random ? random(size, size / 2, true) : size;
     this.origSize = this.size;
   }
 }
@@ -58,5 +66,13 @@ class Queue {
 
   forEach(fn) {
     this.queue.forEach(fn);
+  }
+
+  needPush() {
+    let last = this.queue.length;
+    return !(
+      this.queue[0][0] === this.queue[last][0] &&
+      this.queue[0][1] === this.queue[last][1]
+    );
   }
 }

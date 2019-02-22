@@ -4,7 +4,7 @@ import { Button } from 'antd';
 import Time from '../componentUtil/wordsWantSayToYou/Time';
 import CenterText from '../componentUtil/wordsWantSayToYou/CenterText';
 import steps from '../componentUtil/wordsWantSayToYou/steps';
-import { createLoop } from '../util';
+import { createLoop, getTimeLong } from '../util';
 
 export default class WordsWantSayToYou extends PureComponent {
   constructor() {
@@ -18,7 +18,7 @@ export default class WordsWantSayToYou extends PureComponent {
     };
   }
 
-  componentDidMount = () => {
+  componentDidMount() {
     const canvas = this.canvasRef.current;
     const { width, height } = this.canvasRef.current.getBoundingClientRect();
 
@@ -27,24 +27,20 @@ export default class WordsWantSayToYou extends PureComponent {
 
     const ctx = canvas.getContext('2d');
 
-    this.paintings.time = new Time(
-      {
-        ctx,
-        width,
-        height
-      }
-    );
+    this.paintings.time = new Time({
+      ctx,
+      width,
+      height
+    });
 
-    this.paintings.text = new CenterText(
-      {
-        ctx,
-        width,
-        height
-      }
-    );
+    this.paintings.text = new CenterText({
+      ctx,
+      width,
+      height
+    });
 
     this.init();
-  };
+  }
 
   render = () => {
     const { stepIndex } = this.state;
@@ -108,7 +104,7 @@ export default class WordsWantSayToYou extends PureComponent {
 
   mouseDown = e => {
     Object.entries(this.paintings).forEach(([key, value]) => {
-      value.resetExplode();
+      value.initExplode();
       value.setMouse({
         x: e.pageX,
         y: e.pageY
@@ -130,6 +126,7 @@ export default class WordsWantSayToYou extends PureComponent {
 
   mouseUp = () => {
     Object.entries(this.paintings).forEach(([key, value]) => {
+      value.resetExplode();
       value.setKeys({
         explode: false
       });

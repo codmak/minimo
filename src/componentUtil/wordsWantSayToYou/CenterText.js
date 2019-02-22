@@ -18,8 +18,13 @@ export default class CenterText extends Base {
   }
 
   paintingText() {
+    // 防止过多的资源消耗
+    if (this.beforeText === this.textOption.array) return true;
+
     const { ctx, width, height } = this.option;
     const { color, textSize, array } = this.textOption;
+
+    this.beforeText = array;
 
     ctx.textBaseline = 'middle';
     ctx.font = `${textSize}px 'Libian SC'`;
@@ -28,7 +33,7 @@ export default class CenterText extends Base {
       ctx.fillText(
         str,
         (width - ctx.measureText(str).width) / 2,
-        height / 2 + (index - (array.length - 1) / 2) * (textSize + 30)
+        height / 2 + (index - (array.length - 1) / 2) * (textSize + 20)
       );
     });
   }

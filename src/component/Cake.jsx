@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import PaintingCake from '../componentUtil/cake/PaintingCake';
+import { $on } from '../util';
 
 export default class Cake extends PureComponent {
   constructor(props) {
@@ -21,7 +22,17 @@ export default class Cake extends PureComponent {
       height
     });
 
-    this.paintingCake.start();
+    $on('startCake', () => {
+      this.paintingCake.start();
+    });
+
+    $on('stopCake', () => {
+      this.paintingCake.stop();
+    });
+
+    $on('moreCake', () => {
+      this.paintingCake.more();
+    });
   }
 
   render() {

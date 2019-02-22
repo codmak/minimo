@@ -8,7 +8,7 @@ export default {
     {
       path: 'loading',
       component: Loading,
-      exact: false
+      exact: true
     },
     {
       path: 'season',

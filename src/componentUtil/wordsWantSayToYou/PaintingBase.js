@@ -48,7 +48,7 @@ export default class Base {
     this.option = option;
   }
 
-  // 根据 particle 画点，仅是画点，不包含边框反弹等逻辑处理
+  // 根据 particle 画点
   drawParticle(particle) {
     if (!particle.needDraw) return;
     const {
@@ -85,87 +85,39 @@ export default class Base {
       ctx.closePath();
       ctx.fill();
     });
+
+    this.handleParticleInfo(particle);
   }
 
   // 处理圆点速度包括边框反弹
   handleParticleInfo(particle) {
     const {
-      option: { width, height }
-    } = this;
-
-    particle.pathQueeu.push([particle.x, particle.y]);
-
-    particle.x += particle.speedX;
-    particle.y += particle.speedY;
-
-    // 边框反弹
-    if (particle.x < 2 * particle.size) {
-      particle.speedX = Math.abs(particle.speedX);
-    }
-    if (particle.x > width - 2 * particle.size) {
-      particle.speedX = -Math.abs(particle.speedX);
-    }
-    if (particle.y < 2 * particle.size) {
-      particle.speedY = Math.abs(particle.speedY);
-    }
-    if (particle.y > height - 2 * particle.size) {
-      particle.speedY = -Math.abs(particle.speedY);
-    }
-  }
-
-  getParticleInfo(checkImageData, gutter) {
-    const {
-      option: { width, height },
-      particles
-    } = this;
-    // 获取图片中有文字的区域
-    const pxls = [];
-    for (let w = 0; w < width; w += gutter) {
-      for (let h = 0; h < height; h += gutter) {
-        let index = (w + h * width) * 4;
-        let color = checkImageData(index);
-        if (color) {
-          pxls.push([w, h, color]);
-        }
-      }
-    }
-
-    for (let i = 0; i < pxls.length && i < particles.length; i++) {
-      let particle = particles[i],
-        X = pxls[i][0] - particle.x,
-        Y = pxls[i][1] - particle.y;
-
-      changeColor(particle, 'r', pxls[i][2][0]);
-      changeColor(particle, 'g', pxls[i][2][1]);
-      changeColor(particle, 'b', pxls[i][2][2]);
-
-      // 直线距离
-      const T = Math.sqrt(X * X + Y * Y);
-
-      // 获取与 x 轴的夹角
-      const angle = Math.atan2(Y, X);
-
-      particle.speedX = Math.cos(angle) * T * particle.delta;
-      particle.speedY = Math.sin(angle) * T * particle.delta;
-
-      // 是否是文字的组成
-      particle.needDraw = true;
-
-      this.handleParticleInfo(particle);
-    }
-  }
-
-  explode() {
-    const {
       mouse,
       key: { rebound },
-      option: { constant },
-      particles
+      option: { width, height, constant }
     } = this;
-    for (let i = 0, l = particles.length; i < l; i++) {
-      const particle = particles[i];
-      if (!particles[i].needDraw) break;
 
+    if (particle.pathQueeu.needPush) {
+      particle.pathQueeu.push([particle.x, particle.y]);
+    }
+
+    // 处理颜色的变化
+    if (particle.color.r !== particle.dColor.r) {
+      changeColor(particle, 'r', particle.dColor.r);
+    }
+    if (particle.color.g !== particle.dColor.g) {
+      changeColor(particle, 'g', particle.dColor.g);
+    }
+    if (particle.color.b !== particle.dColor.b) {
+      changeColor(particle, 'b', particle.dColor.b);
+    }
+
+    if (particle.speedX === 0 && particle.speedY === 0) {
+      return;
+    }
+
+    // 处理圆点的运动信息
+    if (particle.isExplode) {
       // 获取与鼠标点下位置的相关信息
       let ax = mouse.x - particle.x;
       let ay = mouse.y - particle.y;
@@ -182,8 +134,70 @@ export default class Base {
 
       particle.speedX += acceleration * Math.cos(angle);
       particle.speedY += acceleration * Math.sin(angle);
+    } else {
+      // 圆点到指定位置
+      let X = particle.dx - particle.x,
+        Y = particle.dy - particle.y;
+      // 直线距离
+      const T = Math.sqrt(X * X + Y * Y);
+      // 获取与 x 轴的夹角
+      const angle = Math.atan2(Y, X);
 
-      this.handleParticleInfo(particle);
+      particle.speedX = T === 0 ? 0 : T * Math.cos(angle) * particle.delta;
+      particle.speedY = T === 0 ? 0 : T * Math.sin(angle) * particle.delta;
+    }
+
+    // 边框反弹
+    if (
+      (particle.x < particle.size && particle.speedX < 0) ||
+      (particle.x > width - particle.size && particle.speedX > 0)
+    ) {
+      particle.speedX *= -1;
+    }
+    if (
+      (particle.y < particle.size && particle.speedY < 0) ||
+      (particle.y > height - particle.size && particle.speedY > 0)
+    ) {
+      particle.speedY *= -1;
+    }
+
+    // 获得下一次的位置
+    particle.x += particle.speedX;
+    particle.y += particle.speedY;
+  }
+
+  getParticleInfo(checkImageData, gutter) {
+    const {
+      option: { width, height },
+      particles
+    } = this;
+    // 获取图片中有文字的区域
+    const pxls = [];
+
+    for (let w = 0; w < width; w += gutter) {
+      for (let h = 0; h < height; h += gutter) {
+        let index = (w + h * width) * 4;
+        let color = checkImageData(index);
+        if (color) {
+          pxls.push([w, h, color]);
+        }
+      }
+    }
+
+    for (let i = 0; i < pxls.length && i < particles.length; i++) {
+      let particle = particles[i];
+
+      particle.dx = pxls[i][0];
+      particle.dy = pxls[i][1];
+      particle.dColor = {
+        r: pxls[i][2][0],
+        g: pxls[i][2][1],
+        b: pxls[i][2][2]
+      };
+
+      particle.isExplode = false;
+      // 是否是文字的组成
+      particle.needDraw = true;
     }
   }
 
@@ -196,11 +210,10 @@ export default class Base {
     } = this;
     ctx.clearRect(0, 0, width, height);
 
-    if (explode) {
-      this.explode();
-    } else {
-      this.paintingText(ctx, width, height);
-
+    if (!explode) {
+      if (this.paintingText()) {
+        return;
+      }
       const imgData = ctx.getImageData(0, 0, width, height);
       ctx.clearRect(0, 0, width, height);
 
@@ -215,29 +228,37 @@ export default class Base {
   // 继承该对象时需要覆盖该方法，该方法用于在画布上绘画
   paintingText() {}
 
-  // 继承可覆盖该方法，用于自定义获取图片中的点的
+  // 继承可覆盖该方法，用于自定义获取图片中某个点的相关信息
   checkImageData(imgData, index) {
     return imgData.data[index + 3] !== 0
       ? [imgData.data[index], imgData.data[index + 1], imgData.data[index + 2]]
       : null;
   }
 
+  // 画点
   draw() {
     const { particles } = this;
-    particles.forEach(particle => this.drawParticle(particle));
+    for (let i = 0, len = particles.length; i < len; i++) {
+      if (!particles[i].needDraw) break;
+      this.drawParticle(particles[i]);
+    }
+  }
+
+  initExplode() {
+    const { particles } = this;
+    for (let i = 0, len = particles.length; i < len; i++) {
+      if (!particles[i].needDraw) break;
+      particles[i].isExplode = true;
+      particles[i].speedX = Math.floor(Math.random() * 10) - 5;
+      particles[i].speedY = Math.floor(Math.random() * 10) - 5;
+    }
   }
 
   resetExplode() {
     const { particles } = this;
     particles.forEach(particle => {
-      particle.speedX = Math.floor(Math.random() * 10) - 5;
-      particle.speedY = Math.floor(Math.random() * 10) - 5;
+      particle.isExplode = false;
     });
-  }
-
-  resetSize({ width, height }) {
-    this.option.width = width;
-    this.option.height = height;
   }
 
   setKeys(key) {
@@ -254,17 +275,16 @@ export default class Base {
     };
   }
 
+  resetSize({ width, height }) {
+    this.option.width = width;
+    this.option.height = height;
+  }
+
   changeParticleInfo(particleInfo) {
     this.particles.forEach(particle => {
       if ('size' in particleInfo) {
         particle.changeSize(particleInfo.size);
       }
-    });
-  }
-
-  resetParticlePositon() {
-    this.particles.forEach(particle => {
-      particle.resetPosition();
     });
   }
 }
