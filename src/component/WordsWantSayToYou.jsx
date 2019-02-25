@@ -4,7 +4,7 @@ import { Button } from 'antd';
 import Time from '../componentUtil/wordsWantSayToYou/Time';
 import CenterText from '../componentUtil/wordsWantSayToYou/CenterText';
 import steps from '../componentUtil/wordsWantSayToYou/steps';
-import { createLoop, getTimeLong } from '../util';
+import { createLoop } from '../util';
 
 export default class WordsWantSayToYou extends PureComponent {
   constructor() {
@@ -12,6 +12,7 @@ export default class WordsWantSayToYou extends PureComponent {
     this.canvasRef = React.createRef();
     this.paintings = {};
     this.loop = null;
+    this.press = false;
     this.steps = steps;
     this.state = {
       stepIndex: 0
@@ -42,7 +43,12 @@ export default class WordsWantSayToYou extends PureComponent {
     this.init();
   }
 
-  render = () => {
+  componentWillUnmount() {
+    this.loop.stop();
+    this.removeEvent();
+  }
+
+  render() {
     const { stepIndex } = this.state;
     return (
       <div className="wwsty-all">
@@ -65,7 +71,7 @@ export default class WordsWantSayToYou extends PureComponent {
         />
       </div>
     );
-  };
+  }
 
   next = () => {
     const { stepIndex } = this.state;
@@ -85,10 +91,6 @@ export default class WordsWantSayToYou extends PureComponent {
 
   init = () => {
     const { steps } = this;
-    // this.paintings.time.painting();
-    // this.paintings.text.painting();
-    // this.paintings.time.draw();
-    // this.paintings.text.draw();
     this.loop = createLoop(() => {
       this.paintings.time.painting();
       this.paintings.text.painting();
@@ -103,6 +105,7 @@ export default class WordsWantSayToYou extends PureComponent {
   };
 
   mouseDown = e => {
+    this.press = true;
     Object.entries(this.paintings).forEach(([key, value]) => {
       value.initExplode();
       value.setMouse({
@@ -116,6 +119,7 @@ export default class WordsWantSayToYou extends PureComponent {
   };
 
   mouseMove = e => {
+    if (!this.press) return;
     Object.entries(this.paintings).forEach(([key, value]) => {
       value.setMouse({
         x: e.pageX,
@@ -178,11 +182,6 @@ export default class WordsWantSayToYou extends PureComponent {
     Object.entries(this.paintings).forEach(([key, value]) => {
       value.resetSize({ width, height });
     });
-  };
-
-  componentWillUnmount = () => {
-    this.loop.stop();
-    this.removeEvent();
   };
 
   initEvent = () => {

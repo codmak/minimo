@@ -1,6 +1,6 @@
 import { mergeDeepRight } from 'ramda';
 import Particle from './Particle';
-import { changeColor } from '../../util';
+import { changeColor, random } from '../../util';
 
 const mergeOption = mergeDeepRight({
   width: 400,
@@ -37,12 +37,14 @@ export default class Base {
     const {
       width,
       height,
-      particleInfo: { size, number, random }
+      particleInfo: { size, number, random, deltaC }
     } = option;
 
     this.particles = [];
     for (let i = 0; i < number; i++) {
-      this.particles.push(new Particle({ width, height, size, random }));
+      this.particles.push(
+        new Particle({ width, height, size, random, deltaC })
+      );
     }
 
     this.option = option;
@@ -97,7 +99,7 @@ export default class Base {
       option: { width, height, constant }
     } = this;
 
-    if (particle.pathQueeu.needPush) {
+    if (particle.pathQueeu.needPush(particle.x, particle.y)) {
       particle.pathQueeu.push([particle.x, particle.y]);
     }
 
@@ -249,8 +251,8 @@ export default class Base {
     for (let i = 0, len = particles.length; i < len; i++) {
       if (!particles[i].needDraw) break;
       particles[i].isExplode = true;
-      particles[i].speedX = Math.floor(Math.random() * 10) - 5;
-      particles[i].speedY = Math.floor(Math.random() * 10) - 5;
+      particles[i].speedX = random(5, -5, { decimal: true });
+      particles[i].speedY = random(5, -5, { decimal: true });
     }
   }
 

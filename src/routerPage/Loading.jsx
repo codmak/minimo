@@ -54,6 +54,10 @@ class Load extends PureComponent {
     }, 1000);
   }
 
+  componentWillUnmount() {
+    // $emit('stopCake');
+  }
+
   changePercentToArray = percent => {
     let num = Math.floor(percent * 16);
     let newRect = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];

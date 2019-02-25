@@ -24,7 +24,6 @@ export default [
     });
     paintings.text.changeTextOption({
       array: [],
-      color: [],
       textSize: 100
     });
   },
@@ -41,16 +40,16 @@ export default [
       textSize: 100
     });
   },
-  // ...beforeText.map(createText),
-  // paintings => {
-  //   let color = getTextColor();
-  //   paintings.text.changeTextOption({
-  //     array: ['情话', '在乐评中'],
-  //     color: color,
-  //     textSize: 120
-  //   });
-  // },
-  // ...musicText.map(createText),
+  ...beforeText.map(createText),
+  paintings => {
+    let color = getTextColor();
+    paintings.text.changeTextOption({
+      array: ['那些', '藏在乐评中的', '情话'],
+      color: color,
+      textSize: 120
+    });
+  },
+  ...musicText.map(createText),
   paintings => {
     let color = getTextColor();
     paintings.text.changeTextOption({

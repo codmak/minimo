@@ -114,18 +114,6 @@ export default class PaintingCake {
   start() {
     const { width } = this.option;
     this.loadImage(images).then(() => {
-      // this.cakes.push(
-      //   new Cake({
-      //     image: this.cakeImages[random(57)],
-      //     size: 80,
-      //     color: getCakeColor(),
-      //     speedX: 20,
-      //     speedY: 20,
-      //     x: 100,
-      //     y: 100
-      //   })
-      // );
-      // this.draw();
       clearTimeout(this.stopTimer);
       this.intervalTimer = setInterval(() => {
         let length = this.cakeImages.length;
