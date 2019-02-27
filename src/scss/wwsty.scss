@@ -3,10 +3,91 @@
   > canvas {
     @include square(100%);
   }
+  .prev,
   .next {
-    @include posi(50%, null, 0, 10px);
+    @include square(100px);
+    transform: translateY(-50%);
+    opacity: 0.8;
+    border-radius: 16px;
+    border-width: 4px;
+    position: relative;
+    @include button-variant(#fff, #ffcece, darken(#ffcece, 10));
+    transition: 0.4s;
+    &.disabled {
+      pointer-events: none;
+      cursor: not-allowed;
+      @include button-variant(#fff, #f5f5f5, darken(#f5f5f5, 10));
+    }
+    &::before,
+    &::after {
+      content: '';
+      display: block;
+      position: absolute;
+      width: 40px;
+      height: 6px;
+      border-radius: 4px;
+      background: #fff;
+      transition: 0.4s;
+    }
   }
   .prev {
-    @include posi(50%, 10px, 0);
+    @include posi(50%, 20px);
+    &::before,
+    &::after {
+      right: 30px;
+    }
+    &::before {
+      top: 32px;
+      transform: rotate(-40deg);
+    }
+    &::after {
+      top: 54px;
+      transform: rotate(40deg);
+    }
+    &:hover {
+      &::before,
+      &::after {
+        transform: none;
+        right: 26px;
+      }
+    }
+    &:active {
+      &::before {
+        transform: translateY(-10px);
+      }
+      &::after {
+        transform: translateY(10px);
+      }
+    }
+  }
+  .next {
+    @include posi(50%, null, 0, 20px);
+    &::before,
+    &::after {
+      left: 30px;
+    }
+    &::before {
+      top: 32px;
+      transform: rotate(40deg);
+    }
+    &::after {
+      top: 54px;
+      transform: rotate(-40deg);
+    }
+    &:hover {
+      &::before,
+      &::after {
+        transform: none;
+        left: 26px;
+      }
+    }
+    &:active {
+      &::before {
+        transform: translateY(-10px);
+      }
+      &::after {
+        transform: translateY(10px);
+      }
+    }
   }
 }

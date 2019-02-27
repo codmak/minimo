@@ -1,9 +1,15 @@
-import { getBeforeText, getMusicText, getPoemText } from './data/say';
+import {
+  getBeforeText,
+  getMusicText,
+  getPoemText,
+  getAcoText
+} from './data/say';
 import { getTextColor } from './data/color';
 
 const beforeText = getBeforeText();
 const musicText = getMusicText();
 const poemText = getPoemText();
+const acoText = getAcoText();
 
 function createText(item) {
   return paintings => {
@@ -44,7 +50,7 @@ export default [
   paintings => {
     let color = getTextColor();
     paintings.text.changeTextOption({
-      array: ['那些', '藏在乐评中的', '情话'],
+      array: ['情话', '散落在网易云里'],
       color: color,
       textSize: 120
     });
@@ -53,10 +59,19 @@ export default [
   paintings => {
     let color = getTextColor();
     paintings.text.changeTextOption({
-      array: ['情话', '在诗里'],
+      array: ['情话', '隐藏在诗中'],
       color: color,
       textSize: 120
     });
   },
-  ...poemText.map(createText)
+  ...poemText.map(createText),
+  paintings => {
+    let color = getTextColor();
+    paintings.text.changeTextOption({
+      array: ['情话', '在心中'],
+      color: color,
+      textSize: 120
+    });
+  },
+  ...acoText.map(createText)
 ];

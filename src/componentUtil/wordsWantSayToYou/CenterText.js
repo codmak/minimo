@@ -27,7 +27,7 @@ export default class CenterText extends Base {
     this.beforeText = array;
 
     ctx.textBaseline = 'middle';
-    ctx.font = `${textSize}px 'Libian SC'`;
+    ctx.font = `${textSize}px 'Libian SC', 'Microsoft YaHei'`;
     array.forEach((str, index) => {
       ctx.fillStyle = color[index % color.length];
       ctx.fillText(

@@ -1,6 +1,4 @@
 import React, { PureComponent } from 'react';
-import { Button } from 'antd';
-
 import Time from '../componentUtil/wordsWantSayToYou/Time';
 import CenterText from '../componentUtil/wordsWantSayToYou/CenterText';
 import steps from '../componentUtil/wordsWantSayToYou/steps';
@@ -10,12 +8,15 @@ export default class WordsWantSayToYou extends PureComponent {
   constructor() {
     super();
     this.canvasRef = React.createRef();
+    // 绘画对象存储
     this.paintings = {};
+    // 定时器存储
     this.loop = null;
+    // 是否按下
     this.press = false;
     this.steps = steps;
     this.state = {
-      stepIndex: 0
+      stepIndex: 1
     };
   }
 
@@ -40,7 +41,7 @@ export default class WordsWantSayToYou extends PureComponent {
       height
     });
 
-    this.init();
+    // this.init();
   }
 
   componentWillUnmount() {
@@ -53,25 +54,34 @@ export default class WordsWantSayToYou extends PureComponent {
     return (
       <div className="wwsty-all">
         <canvas ref={this.canvasRef} />
-        <Button
-          className="prev"
-          type="primary"
-          shape="circle"
-          icon="left"
-          disabled={stepIndex === 0}
-          onClick={this.prev}
+        <div
+          className={`prev btn${stepIndex === 0 ? ' disabled' : ''}`}
+          // onClick={this.prev}
         />
-        <Button
-          className="next"
-          type="primary"
-          shape="circle"
-          icon="right"
-          disabled={stepIndex === this.steps.length - 1}
-          onClick={this.next}
+        <div
+          className={`next btn${
+            stepIndex === this.steps.length - 1 ? ' disabled' : ''
+          }`}
+          // onClick={this.next}
         />
       </div>
     );
   }
+
+  init = () => {
+    const { steps } = this;
+    this.loop = createLoop(() => {
+      this.paintings.time.painting();
+      this.paintings.text.painting();
+      this.paintings.time.draw();
+      this.paintings.text.draw();
+    });
+
+    this.loop.start();
+    this.initEvent();
+
+    steps[0](this.paintings);
+  };
 
   next = () => {
     const { stepIndex } = this.state;
@@ -89,24 +99,9 @@ export default class WordsWantSayToYou extends PureComponent {
     this.steps[stepIndex - 1](this.paintings);
   };
 
-  init = () => {
-    const { steps } = this;
-    this.loop = createLoop(() => {
-      this.paintings.time.painting();
-      this.paintings.text.painting();
-      this.paintings.time.draw();
-      this.paintings.text.draw();
-    });
-
-    this.loop.start();
-    this.initEvent();
-
-    steps[0](this.paintings);
-  };
-
   mouseDown = e => {
     this.press = true;
-    Object.entries(this.paintings).forEach(([key, value]) => {
+    Object.values(this.paintings).forEach(value => {
       value.initExplode();
       value.setMouse({
         x: e.pageX,
@@ -120,7 +115,7 @@ export default class WordsWantSayToYou extends PureComponent {
 
   mouseMove = e => {
     if (!this.press) return;
-    Object.entries(this.paintings).forEach(([key, value]) => {
+    Object.values(this.paintings).forEach(value => {
       value.setMouse({
         x: e.pageX,
         y: e.pageY
@@ -129,7 +124,7 @@ export default class WordsWantSayToYou extends PureComponent {
   };
 
   mouseUp = () => {
-    Object.entries(this.paintings).forEach(([key, value]) => {
+    Object.values(this.paintings).forEach(value => {
       value.resetExplode();
       value.setKeys({
         explode: false
@@ -139,19 +134,26 @@ export default class WordsWantSayToYou extends PureComponent {
 
   keyDown = e => {
     let keys = {};
+    console.log(e);
     switch (e.keyCode) {
-      case 16:
+      case 32:
         keys.rebound = true;
         break;
       case 38:
         keys.bigger = true;
         break;
-      case 32:
+      case 16:
         keys.shake = true;
+        break;
+      case 37:
+        this.prev();
+        break;
+      case 39:
+        this.next();
         break;
       default:
     }
-    Object.entries(this.paintings).forEach(([key, value]) => {
+    Object.values(this.paintings).forEach(value => {
       value.setKeys(keys);
     });
   };
@@ -159,27 +161,27 @@ export default class WordsWantSayToYou extends PureComponent {
   keyUp = e => {
     let keys = { shift: false };
     switch (e.keyCode) {
-      case 16:
+      case 32:
         keys.rebound = false;
         break;
       case 38:
         keys.bigger = false;
         break;
-      case 32:
+      case 16:
         keys.shake = false;
         break;
       default:
     }
-    Object.entries(this.paintings).forEach(([key, value]) => {
+    Object.values(this.paintings).forEach(value => {
       value.setKeys(keys);
     });
   };
 
-  windowResize = e => {
-    const { width, height } = document.body.getBoundingClientRect();
+  windowResize = () => {
+    const { width, height } = this.canvasRef.current.getBoundingClientRect();
     this.canvasRef.current.width = width;
     this.canvasRef.current.height = height;
-    Object.entries(this.paintings).forEach(([key, value]) => {
+    Object.values(this.paintings).forEach(value => {
       value.resetSize({ width, height });
     });
   };

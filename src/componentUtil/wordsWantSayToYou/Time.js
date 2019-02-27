@@ -37,6 +37,7 @@ export default class Time extends Base {
     this.beforeText = text;
     this.beforePosi = center;
 
+    // 绘画 5 次更换一次颜色
     this.colorNum++;
     if (this.colorNum > 5) {
       this.colorNum %= 5;

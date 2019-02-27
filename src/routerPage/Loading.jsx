@@ -55,7 +55,8 @@ class Load extends PureComponent {
   }
 
   componentWillUnmount() {
-    // $emit('stopCake');
+    $emit('stopCake');
+    this.audio.pause();
   }
 
   changePercentToArray = percent => {
