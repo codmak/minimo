@@ -20,9 +20,9 @@ class Season extends PureComponent {
             </CSSTransition>
           </TransitionGroup>
         </div>
-        {/* <div className="sa-music-wrap">
+        <div className="sa-music-wrap">
           <Music />
-        </div> */}
+        </div>
       </div>
     );
   };

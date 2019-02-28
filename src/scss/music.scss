@@ -1,9 +1,9 @@
 .music-wrap-all {
   @include square(100%);
   .mwa-box {
-    flex: auto;
-    width: 10px;
-    height: 100%;
+    width: 100px;
+    height: 100px;
+    @include posi(0, null, null, 0);
   }
   .mwa-canvas {
     @include square(100%);

@@ -17,10 +17,14 @@ export default class MusicBar {
       );
     }
 
-    this.canvasCtx = option.canvas.getContext('2d');
-    option.canvas.width = option.width;
-    option.canvas.height = option.height;
-    this.option = option;
+    this.analyserGutter = Math.round(1024 / barInfo.number);
+    this.arrayGutter = this.option = option;
+  }
+
+  drawRect(bar) {
+    const { height, ctx } = this.option;
+    ctx.fillStyle = bar.color;
+    ctx.fillRect(bar.x, (height - bar.height) / 2, bar.width, bar.height);
   }
 
   getAudioDataArray(analyser) {
@@ -31,37 +35,26 @@ export default class MusicBar {
     return dataArray;
   }
 
-  drawRect(bar) {
-    const { height } = this.option;
-    this.canvasCtx.fillStyle = bar.color;
-    this.canvasCtx.fillRect(
-      bar.x,
-      (height - bar.height) / 2,
-      bar.width,
-      bar.height
-    );
+  draw() {
+    const { analyser, ctx, width, height } = this.option;
+
+    ctx.clearRect(0, 0, width, height);
+    var array = this.getAudioDataArray(analyser);
+    this.bar.forEach((bar, index) => {
+      bar.height = (array[index * this.analyserGutter] / 256) * height;
+    });
+
+    this.bar.forEach(bar => this.drawRect(bar));
   }
 
-  audioVisible(analyser) {
-    const {
-      width,
-      height,
-      barInfo: { number }
-    } = this.option;
-    var gutter = Math.round(1024 / number);
+  start() {
+    if (!this.loop) {
+      this.loop = createLoop(() => this.draw());
+    }
+    this.loop.start();
+  }
 
-    const draw = () => {
-      this.canvasCtx.clearRect(0, 0, width, height);
-      var array = this.getAudioDataArray(analyser);
-      this.bar.forEach((bar, index) => {
-        bar.height = (array[index * gutter] * height) / 256;
-      });
-      this.bar.forEach(bar => this.drawRect(bar));
-    };
-
-    const loop = createLoop(draw);
-    loop.start();
-
-    return loop.stop;
+  stop() {
+    this.loop.stop();
   }
 }

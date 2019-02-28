@@ -16,7 +16,7 @@ export default class WordsWantSayToYou extends PureComponent {
     this.press = false;
     this.steps = steps;
     this.state = {
-      stepIndex: 1
+      stepIndex: 0
     };
   }
 
@@ -56,13 +56,13 @@ export default class WordsWantSayToYou extends PureComponent {
         <canvas ref={this.canvasRef} />
         <div
           className={`prev btn${stepIndex === 0 ? ' disabled' : ''}`}
-          // onClick={this.prev}
+          onClick={this.prev}
         />
         <div
           className={`next btn${
             stepIndex === this.steps.length - 1 ? ' disabled' : ''
           }`}
-          // onClick={this.next}
+          onClick={this.next}
         />
       </div>
     );
@@ -134,7 +134,6 @@ export default class WordsWantSayToYou extends PureComponent {
 
   keyDown = e => {
     let keys = {};
-    console.log(e);
     switch (e.keyCode) {
       case 32:
         keys.rebound = true;

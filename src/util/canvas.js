@@ -6,14 +6,22 @@ export function changeColor(point, type, value) {
 
 export function createLoop(func) {
   let timer = -1;
+  let status = 'stop';
   function loop() {
     func && func();
     timer = requestAnimationFrame(loop);
   }
   return {
-    start: loop,
+    start() {
+      status = 'start';
+      loop();
+    },
     stop() {
+      status = 'stop';
       cancelAnimationFrame(timer);
+    },
+    getStatus() {
+      return status;
     }
   };
 }

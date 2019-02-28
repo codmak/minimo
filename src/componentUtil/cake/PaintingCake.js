@@ -8,6 +8,7 @@ export default class PaintingCake {
     this.option = option;
     this.cakes = [];
     this.cakeImages = [];
+    this.loop = createLoop(() => this.draw());
   }
 
   loadImage(urls) {
@@ -129,7 +130,6 @@ export default class PaintingCake {
           })
         );
       }, 1000);
-      this.loop = createLoop(() => this.draw());
       this.loop.start();
     });
   }
