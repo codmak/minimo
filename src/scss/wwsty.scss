@@ -1,9 +1,5 @@
 .wwsty-all {
   height: 100%;
-  background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAMAAAADCAYAAABWKLW/AAAAFklEQVQIHWNgYGBI+///PwMIgwmsHAC5exhP0nQwxgAAAABJRU5ErkJggg=='),
-    url(http://cdn.acohome.cn/springBg.jpg);
-  background-repeat: repeat, repeat;
-  background-size: 3px 3px, cover;
   > canvas {
     @include square(100%);
   }
