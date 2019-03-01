@@ -41,7 +41,7 @@ export default class WordsWantSayToYou extends PureComponent {
       height
     });
 
-    // this.init();
+    this.init();
   }
 
   componentWillUnmount() {

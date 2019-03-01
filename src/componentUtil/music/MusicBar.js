@@ -1,3 +1,4 @@
+import hexRgb from 'hex-rgb';
 import Bar from './Bar';
 import { createLoop } from '../../util';
 
@@ -23,7 +24,8 @@ export default class MusicBar {
 
   drawRect(bar) {
     const { height, ctx } = this.option;
-    ctx.fillStyle = bar.color;
+    let color = hexRgb(bar.color);
+    ctx.fillStyle = `rgba(${color.red},${color.green},${color.blue},.5)`;
     ctx.fillRect(bar.x, (height - bar.height) / 2, bar.width, bar.height);
   }
 

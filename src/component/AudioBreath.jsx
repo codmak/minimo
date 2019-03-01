@@ -22,16 +22,15 @@ export default class AudioBreath extends PureComponent {
     this.audio.addEventListener('pause', this.paintingStop);
 
     const canvas = this.canvasRef.current;
-    const { width, height } = this.canvasRef.current.getBoundingClientRect();
 
-    canvas.width = width;
-    canvas.height = height;
+    canvas.width = 100;
+    canvas.height = 100;
 
     const ctx = canvas.getContext('2d');
     this.paintingBreath = new PaintingBreath({
       ctx,
-      width,
-      height,
+      width: 100,
+      height: 100,
       circleInfo: {
         number: 30,
         maxSize: 100,
@@ -111,6 +110,7 @@ export default class AudioBreath extends PureComponent {
             controls
             src={music}
             crossOrigin="anonymous"
+            loop
             ref={this.audioRef}
           />
         </div>

@@ -27,7 +27,6 @@
   }
   .awa-canvas {
     @include square(100px);
-    @include posi(50%, 50%);
-    transform: translate3d(-50%, -50%, 0);
+    @include posi(0, 0);
   }
 }

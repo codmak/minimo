@@ -10,10 +10,12 @@ export default class Cake extends PureComponent {
 
   componentDidMount() {
     const canvas = this.canvasRef.current;
-    const { width, height } = this.canvasRef.current.getBoundingClientRect();
+    const { width, height } = canvas.getBoundingClientRect();
 
     canvas.width = width;
     canvas.height = height;
+    console.log(canvas.getBoundingClientRect());
+    debugger;
 
     const ctx = canvas.getContext('2d');
     this.paintingCake = new PaintingCake({
