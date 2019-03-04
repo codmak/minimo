@@ -85,6 +85,7 @@ export default class WordsWantSayToYou extends PureComponent {
 
   next = () => {
     const { stepIndex } = this.state;
+    if (stepIndex === this.paintings.length - 1) return;
     this.setState({
       stepIndex: stepIndex + 1
     });
@@ -93,6 +94,7 @@ export default class WordsWantSayToYou extends PureComponent {
 
   prev = () => {
     const { stepIndex } = this.state;
+    if (stepIndex === 0) return;
     this.setState({
       stepIndex: stepIndex - 1
     });

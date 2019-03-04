@@ -1,0 +1,83 @@
+$perspective: 800px;
+$radius: 300px;
+$row-length: 20;
+$row-gutter: 360deg / $row-length;
+$box-width: 60px;
+$box-height: 40px;
+$col-length: 12;
+$col-gutter: 100deg / $col-length;
+$sub: $col-gutter * ($col-length - 1) / 2;
+
+.photo-wrap-all {
+  @include square(100%);
+
+  .pwa-stage {
+    @include square(100%);
+    perspective: $perspective;
+
+    .pwa-view {
+      @include size($box-width, $box-height);
+      @include posi(
+        calc(50% - #{$box-height / 2}),
+        calc(50% - #{$box-width / 2})
+      );
+
+      transform-style: preserve-3d;
+      transform: rotateX(-30deg) rotateY(0deg);
+      transition: 0.4s;
+      &.out-rotate {
+        animation: outRotate 30s linear infinite;
+      }
+      &.in-rotate {
+        animation: inRotate 40s linear infinite;
+      }
+    }
+
+    .pwa-row {
+      @include size($box-width, $box-height);
+      position: absolute;
+      top: 0;
+      transform-style: preserve-3d;
+      // background: red;
+      @for $index from 0 to $row-length {
+        &:nth-child(#{$index + 1}) {
+          transform: rotateY($index * $row-gutter) translateZ(-$radius);
+        }
+      }
+    }
+
+    .pwa-cel {
+      @include size($box-width, $box-height);
+      position: absolute;
+      top: 0;
+      transform-origin: 50% 50% $radius;
+      user-select: none;
+      @for $index from 0 to $col-length {
+        &:nth-child(#{$index + 1}) {
+          background: #ccc;
+          transform: rotateX($index * $col-gutter - $sub);
+        }
+      }
+    }
+  }
+}
+
+@keyframes outRotate {
+  0% {
+    transform: rotateX(-30deg) rotateY(0deg);
+  }
+
+  100% {
+    transform: rotateX(-30deg) rotateY(-360deg);
+  }
+}
+
+@keyframes inRotate {
+  0% {
+    transform: translateZ($perspective) rotateX(0deg) rotateY(0deg);
+  }
+
+  100% {
+    transform: translateZ($perspective) rotateX(0deg) rotateY(360deg);
+  }
+}

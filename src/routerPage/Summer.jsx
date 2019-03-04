@@ -1,11 +1,11 @@
 import React, { PureComponent } from 'react';
-import Video from '../component/Video';
+import PhotoShow from '../component/PhotoShow';
 
 export default class Summer extends PureComponent {
   render = () => {
     return (
       <div className="all summer">
-        <Video />
+        <PhotoShow />
       </div>
     );
   };
