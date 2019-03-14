@@ -1,8 +1,7 @@
 .music-wrap-all {
   @include size(100%);
   .mwa-box {
-    width: 100px;
-    height: 100px;
+    @include size(100px);
     @include posi(0, null, null, 0);
   }
   .mwa-canvas {

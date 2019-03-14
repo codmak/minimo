@@ -92,7 +92,7 @@ export default class AudioBreath extends PureComponent {
   render = () => {
     const { playState } = this.state;
     return (
-      <div className="audio-wrap-all p-r">
+      <div className="audio-wrap-all x-center p-r">
         <canvas className="awa-canvas p-a" ref={this.canvasRef} />
         <div className={`awa-wrap ${this.getStateClass(playState)}`}>
           <svg
