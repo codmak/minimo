@@ -1,12 +1,12 @@
 .music-wrap-all {
-  @include square(100%);
+  @include size(100%);
   .mwa-box {
     width: 100px;
     height: 100px;
     @include posi(0, null, null, 0);
   }
   .mwa-canvas {
-    @include square(100%);
+    @include size(100%);
     @include posi(0, 0);
   }
 }

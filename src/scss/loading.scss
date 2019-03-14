@@ -4,12 +4,10 @@
   background-image: url(http://cdn.acohome.cn/whiteBg.jpg);
   background-size: cover;
   .animate-btn-all {
-    height: 100%;
     .animate-wrap {
       transform: translate(24px);
     }
     .col {
-      font-size: 0;
       display: inline-block;
       @for $index from 1 through 4 {
         &:nth-child(#{$index}) .aw-square {
@@ -18,13 +16,10 @@
       }
     }
     .aw-square {
-      @include square(40px);
-      background: #fff;
       margin: 0 4px 8px;
+      @include size(40px);
       border-radius: 4px;
       animation: 2s infinite ease-in;
-      overflow: hidden;
-      transition: 1s;
       &.unloaded {
         opacity: 0.2;
       }
@@ -39,41 +34,39 @@
     }
     .aba-btn-wrap {
       @include posi(80%, 0);
+      text-align: center;
     }
     .btn {
-      opacity: 0.9;
       margin: 4px;
-      line-height: 40px;
       height: 40px;
+      @include font-size(20px, 40px);
       border-radius: 8px;
-      font-size: 20px;
+      color: #fff;
+      opacity: 0.9;
       transition: color 0.4s;
     }
     .cake-btn {
-      @include button-variant(#fff, #f68787, #f68787);
-      background-image: url('http://cdn.acohome.cn/cross-scratches.png');
+      @include button-variant(#f68787, #f68787);
+      background-image: url("http://cdn.acohome.cn/cross-scratches.png");
     }
     .next-btn {
-      @include button-variant(#fff, #8ed6ff, #8ed6ff);
-      background-image: url('http://cdn.acohome.cn/back-pattern.png');
+      @include button-variant(#8ed6ff, #8ed6ff);
+      background-image: url("http://cdn.acohome.cn/back-pattern.png");
     }
     .music-btn {
-      @include button-variant(#fff, #fccb8f, #fccb8f);
-      background-image: url('http://cdn.acohome.cn/crossword.png');
+      @include button-variant(#fccb8f, #fccb8f);
+      background-image: url("http://cdn.acohome.cn/crossword.png");
       position: relative;
       &::before,
       &::after {
-        opacity: 0;
-        content: '';
+        content: " ";
         display: block;
-        position: absolute;
-        width: 20px;
-        height: 4px;
+        @include size(20px, 4px);
         border-radius: 2px;
+        @include posi(0, 0);
         background-color: #fff;
+        opacity: 0;
         transition: 0.4s;
-        top: 0;
-        left: 0;
         transform: none;
       }
       &.music-icon {

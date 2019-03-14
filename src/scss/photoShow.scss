@@ -9,10 +9,10 @@ $col-gutter: 100deg / $col-length;
 $sub: $col-gutter * ($col-length - 1) / 2;
 
 .photo-wrap-all {
-  @include square(100%);
+  @include size(100%);
 
   .pwa-stage {
-    @include square(100%);
+    @include size(100%);
     perspective: $perspective;
 
     .pwa-view {
@@ -23,25 +23,44 @@ $sub: $col-gutter * ($col-length - 1) / 2;
       );
 
       transform-style: preserve-3d;
-      transform: rotateX(-30deg) rotateY(0deg);
+      transform: rotateX(0deg) rotateY(0deg);
       transition: 0.4s;
       &.out-rotate {
         animation: outRotate 30s linear infinite;
       }
       &.in-rotate {
-        animation: inRotate 40s linear infinite;
+        animation: inRotate 60s linear infinite;
       }
     }
 
-    .pwa-row {
+    $gridInfo: 12, 17, 21, 24, 27, 29, 30, 29, 27, 24, 21, 17, 12;
+
+    .pwa-col {
       @include size($box-width, $box-height);
       position: absolute;
       top: 0;
       transform-style: preserve-3d;
-      // background: red;
-      @for $index from 0 to $row-length {
-        &:nth-child(#{$index + 1}) {
-          transform: rotateY($index * $row-gutter) translateZ(-$radius);
+      @for $index from 1 through length($gridInfo) {
+        $num: nth($gridInfo, $index);
+        $xGutter: 120deg / (length($gridInfo) - 1);
+
+        &:nth-child(#{$index}) {
+          .pwa-cel {
+            &.flat {
+              transform: rotateY(0deg);
+            }
+            &.circle {
+              @for $indexInner from 0 to $num {
+                &:nth-child(#{$indexInner + 1}) {
+                  transform: rotateY(
+                      $indexInner * 360deg / $num - 180deg + $index * 10deg
+                    )
+                    rotateX($xGutter * ($index - 1) - 60deg)
+                    translateZ(-$radius);
+                }
+              }
+            }
+          }
         }
       }
     }
@@ -50,25 +69,22 @@ $sub: $col-gutter * ($col-length - 1) / 2;
       @include size($box-width, $box-height);
       position: absolute;
       top: 0;
-      transform-origin: 50% 50% $radius;
+      background: #ccc;
       user-select: none;
-      @for $index from 0 to $col-length {
-        &:nth-child(#{$index + 1}) {
-          background: #ccc;
-          transform: rotateX($index * $col-gutter - $sub);
-        }
-      }
+      box-shadow: 0 0 4px rgba(#000000, 0.5);
+      border-radius: 4px;
+      transition: 2s;
     }
   }
 }
 
 @keyframes outRotate {
   0% {
-    transform: rotateX(-30deg) rotateY(0deg);
+    transform: rotateX(30deg) rotateY(0deg);
   }
 
   100% {
-    transform: rotateX(-30deg) rotateY(-360deg);
+    transform: rotateX(-330deg) rotateY(-360deg);
   }
 }
 

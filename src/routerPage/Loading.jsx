@@ -140,7 +140,7 @@ class Load extends PureComponent {
   render() {
     const { rect, cakeProgress, musicProgress, showNextPage } = this.state;
     return (
-      <div className="loading">
+      <div className="loading x-p-r">
         <div className="p-a-all">
           <Cake />
         </div>
@@ -161,7 +161,7 @@ class Load extends PureComponent {
             ))}
           </div>
           <div className="aba-btn-wrap x-row x-flex-a">
-            <div className="x-center">
+            <div>
               <Motion
                 defaultStyle={{ x: 0 }}
                 style={{
@@ -186,7 +186,7 @@ class Load extends PureComponent {
                 }
               </Motion>
             </div>
-            <div className="x-center">
+            <div>
               <Motion
                 defaultStyle={{ x: 0 }}
                 style={{ x: spring(cakeProgress === 1 ? 150 : 0) }}
@@ -245,7 +245,7 @@ class Load extends PureComponent {
                 }
               </Motion>
             </div>
-            <div className="x-center">
+            <div>
               <Motion
                 defaultStyle={{ x: 0 }}
                 style={{ x: spring(showNextPage ? 220 : 0) }}

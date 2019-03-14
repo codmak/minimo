@@ -14,8 +14,6 @@ export default class Cake extends PureComponent {
 
     canvas.width = width;
     canvas.height = height;
-    console.log(canvas.getBoundingClientRect());
-    debugger;
 
     const ctx = canvas.getContext('2d');
     this.paintingCake = new PaintingCake({

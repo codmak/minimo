@@ -13,5 +13,5 @@
 
 .p-a-all {
   @include posi(0, 0);
-  @include square(100%);
+  @include size(100%);
 }
