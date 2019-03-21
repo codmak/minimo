@@ -3,49 +3,37 @@ import React, { PureComponent } from 'react';
 export default class PhotoShow extends PureComponent {
   constructor(props) {
     super(props);
+    this.stageRef = React.createRef();
+    this.ballSplit = [12, 17, 21, 24, 27, 29, 30, 29, 27, 24, 21, 17, 12];
     this.state = {
+      cardInfo: new Array(290)
+        .fill(0)
+        .map((_, index) => ({ name: index, state: 0 })),
       ballState: 0,
-      grid: [
-        new Array(12).fill(0).map((_, index) => ({ name: index, state: 0 })),
-        new Array(17).fill(0).map((_, index) => ({ name: index, state: 0 })),
-        new Array(21).fill(0).map((_, index) => ({ name: index, state: 0 })),
-        new Array(24).fill(0).map((_, index) => ({ name: index, state: 0 })),
-        new Array(27).fill(0).map((_, index) => ({ name: index, state: 0 })),
-        new Array(29).fill(0).map((_, index) => ({ name: index, state: 0 })),
-        new Array(30).fill(0).map((_, index) => ({ name: index, state: 0 })),
-        new Array(29).fill(0).map((_, index) => ({ name: index, state: 0 })),
-        new Array(27).fill(0).map((_, index) => ({ name: index, state: 0 })),
-        new Array(24).fill(0).map((_, index) => ({ name: index, state: 0 })),
-        new Array(21).fill(0).map((_, index) => ({ name: index, state: 0 })),
-        new Array(17).fill(0).map((_, index) => ({ name: index, state: 0 })),
-        new Array(12).fill(0).map((_, index) => ({ name: index, state: 0 }))
-      ]
+      flag: true
     };
-    this.timer = null;
 
-    let grid = this.state.grid;
-    let col = grid.length - 1;
-    let row = grid[col].length - 1;
-
-    let timer = setInterval(() => {
-      grid[col][row].state = 1;
-      this.setState({
-        grid: [...grid]
-      });
-      row--;
-      if (row === -1) {
-        col--;
-        if (col === -1) {
-          clearInterval(timer);
-          this.setState({
-            ballState: 1
-          });
-          return;
-        }
-        row = grid[col].length - 1;
-      }
-    }, 200);
+    // this.createBall();
   }
+
+  createBall = () => {
+    const { cardInfo } = this.state;
+    let index = 0;
+    let timer = setInterval(() => {
+      if (index === cardInfo.length) {
+        clearInterval(timer);
+        this.setState({
+          ballState: 1
+        });
+        return;
+      }
+      cardInfo[index].state = 1;
+      this.setState(state => ({
+        flag: !state.flag
+      }));
+      index++;
+    }, 200);
+  };
 
   getCardStateClass = cardState => {
     switch (cardState) {
@@ -69,23 +57,74 @@ export default class PhotoShow extends PureComponent {
     }
   };
 
+  changeAnimateState = state => {
+    let stage = this.stageRef.current;
+    stage.style.animationPlayState = state ? 'running' : 'paused';
+  };
+
+  getCardClass = () => {};
+
+  showIn = () => {
+    this.changBallState('none', 'translateZ(800px)', 'inRotate-0', '60s');
+  };
+
+  showOut = () => {
+    this.changBallState('translateZ(800px)', 'none', 'outRotate', '30s');
+  };
+
+  changBallState = (initState, lateState, animationName, animationDuration) => {
+    let stage = this.stageRef.current;
+    stage.style.animationPlayState = 'paused';
+    setTimeout(() => {
+      stage.style.transform = window.getComputedStyle(stage).transform;
+      stage.style.animationName = 'none';
+      setTimeout(() => {
+        stage.style.transform = initState;
+        stage.addEventListener('transitionend', function listen() {
+          stage.style.transform = lateState;
+          stage.removeEventListener('transitionend', listen);
+          stage.addEventListener('transitionend', function listen2() {
+            stage.style.animationName = animationName;
+            stage.style.animationDuration = animationDuration;
+            stage.style.animationPlayState = 'running';
+            stage.removeEventListener('transitionend', listen2);
+          });
+        });
+      });
+    }, 500);
+  };
+
   render() {
-    const { grid, ballState } = this.state;
+    const { cardInfo } = this.state;
     return (
       <div className="photo-wrap-all">
+        <span
+          className="btn btn-stop"
+          onClick={() => this.changeAnimateState(false)}
+        >
+          stop
+        </span>
+        <span
+          className="btn btn-start"
+          onClick={() => this.changeAnimateState(true)}
+        >
+          start
+        </span>
+        <span className="btn btn-in" onClick={this.showIn}>
+          in
+        </span>
+        <span className="btn btn-out" onClick={this.showOut}>
+          out
+        </span>
         <div className="p-r pwa-stage">
-          <div className={`p-a pwa-view ${this.getBallStateClass(ballState)}`}>
-            {grid.map((col, colIndex) => (
-              <div className="pwa-col" key={colIndex}>
-                {col.map((item, rowIndex) => (
-                  <div
-                    className={`pwa-cel ${this.getCardStateClass(item.state)}`}
-                    key={rowIndex}
-                  >
-                    {colIndex}-{rowIndex}
-                  </div>
-                ))}
-              </div>
+          <div className={`p-a pwa-view`} ref={this.stageRef}>
+            {cardInfo.map((item, index) => (
+              <div
+                className={`pwa-cel ${this.getCardStateClass(
+                  item.state
+                )} cel-${index}`}
+                key={index}
+              />
             ))}
           </div>
         </div>

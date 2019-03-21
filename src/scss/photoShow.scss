@@ -1,12 +1,8 @@
 $perspective: 800px;
 $radius: 300px;
-$row-length: 20;
-$row-gutter: 360deg / $row-length;
 $box-width: 60px;
 $box-height: 40px;
-$col-length: 12;
-$col-gutter: 100deg / $col-length;
-$sub: $col-gutter * ($col-length - 1) / 2;
+$gridInfo: 12, 17, 21, 24, 27, 29, 30, 29, 27, 24, 21, 17, 12;
 
 .photo-wrap-all {
   @include size(100%);
@@ -17,50 +13,35 @@ $sub: $col-gutter * ($col-length - 1) / 2;
 
     .pwa-view {
       @include size($box-width, $box-height);
-      @include posi(
-        calc(50% - #{$box-height / 2}),
-        calc(50% - #{$box-width / 2})
-      );
+      @include posi(calc(50% - #{$box-height / 2}), calc(50% - #{$box-width / 2}));
 
       transform-style: preserve-3d;
       transform: rotateX(0deg) rotateY(0deg);
-      transition: 0.4s;
+      transition: 1s;
       &.out-rotate {
         animation: outRotate 30s linear infinite;
       }
       &.in-rotate {
         animation: inRotate 60s linear infinite;
       }
+      &.stop {
+        animation-play-state: paused;
+      }
     }
 
-    $gridInfo: 12, 17, 21, 24, 27, 29, 30, 29, 27, 24, 21, 17, 12;
-
-    .pwa-col {
-      @include size($box-width, $box-height);
-      position: absolute;
-      top: 0;
-      transform-style: preserve-3d;
+    .circle {
+      $sum: 0;
       @for $index from 1 through length($gridInfo) {
         $num: nth($gridInfo, $index);
         $xGutter: 120deg / (length($gridInfo) - 1);
 
-        &:nth-child(#{$index}) {
-          .pwa-cel {
-            &.flat {
-              transform: rotateY(0deg);
-            }
-            &.circle {
-              @for $indexInner from 0 to $num {
-                &:nth-child(#{$indexInner + 1}) {
-                  transform: rotateY(
-                      $indexInner * 360deg / $num - 180deg + $index * 10deg
-                    )
-                    rotateX($xGutter * ($index - 1) - 60deg)
-                    translateZ(-$radius);
-                }
-              }
-            }
+        @for $indexInner from 0 to $num {
+          &.cel-#{$sum} {
+            transform: rotateY($indexInner * 360deg / $num - 180deg + $index * 10deg)
+              rotateX($xGutter * ($index - 1) - 60deg)
+              translateZ(-$radius);
           }
+          $sum: $sum + 1;
         }
       }
     }
@@ -71,29 +52,54 @@ $sub: $col-gutter * ($col-length - 1) / 2;
       top: 0;
       background: #ccc;
       user-select: none;
-      box-shadow: 0 0 4px rgba(#000000, 0.5);
       border-radius: 4px;
       transition: 2s;
+      &.flat {
+        transform: rotateY(0deg);
+      }
+      &.circle {
+        box-shadow: 0 0 4px rgba(#000000, 0.5);
+      }
     }
+  }
+  .btn-stop {
+    @include posi(10px, 10px);
+    z-index: 2;
+  }
+  .btn-start {
+    @include posi(10px, 50px);
+    z-index: 2;
+  }
+  .btn-in {
+    @include posi(40px, 10px);
+    z-index: 2;
+  }
+  .btn-out {
+    @include posi(40px, 50px);
+    z-index: 2;
   }
 }
 
 @keyframes outRotate {
   0% {
-    transform: rotateX(30deg) rotateY(0deg);
+    transform: rotateX(0deg) rotateY(0deg);
   }
 
   100% {
-    transform: rotateX(-330deg) rotateY(-360deg);
+    transform: rotateX(360deg) rotateY(-360deg);
   }
 }
 
-@keyframes inRotate {
-  0% {
-    transform: translateZ($perspective) rotateX(0deg) rotateY(0deg);
-  }
+@for $index from 1 through length($gridInfo) {
+  $xGutter: 120deg / (length($gridInfo) - 1);
 
-  100% {
-    transform: translateZ($perspective) rotateX(0deg) rotateY(360deg);
+  @keyframes inRotate-#{$index - 7} {
+    0% {
+      transform: translateZ($perspective) rotateX(60deg - $xGutter * ($index - 1)) rotateY(0deg);
+    }
+
+    100% {
+      transform: translateZ($perspective) rotateX(60deg - $xGutter * ($index - 1)) rotateY(360deg);
+    }
   }
 }
