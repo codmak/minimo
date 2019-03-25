@@ -12,8 +12,8 @@ $gridInfo: 12, 17, 21, 24, 27, 29, 30, 29, 27, 24, 21, 17, 12;
     perspective: $perspective;
 
     .pwa-view {
-      @include size($box-width, $box-height);
-      @include posi(calc(50% - #{$box-height / 2}), calc(50% - #{$box-width / 2}));
+      @include size(100%);
+      // @include posi(calc(50% - #{$box-height / 2}), calc(50% - #{$box-width / 2}));
 
       transform-style: preserve-3d;
       transform: rotateX(0deg) rotateY(0deg);
@@ -47,18 +47,28 @@ $gridInfo: 12, 17, 21, 24, 27, 29, 30, 29, 27, 24, 21, 17, 12;
     }
 
     .pwa-cel {
-      @include size($box-width, $box-height);
       position: absolute;
-      top: 0;
       background: #ccc;
       user-select: none;
       border-radius: 4px;
       transition: 2s;
-      &.flat {
-        transform: rotateY(0deg);
+      opacity: 1;
+      &.circle-before,
+      &.circle {
+        @include size($box-width, $box-height);
+        @include posi(calc(50% - #{$box-height / 2}), calc(50% - #{$box-width / 2}));
       }
       &.circle {
         box-shadow: 0 0 4px rgba(#000000, 0.5);
+      }
+      &.flat,
+      &.init {
+        @include size(270px, 180px);
+        transition: transform 1s, opacity 0.5s .5s;
+      }
+      &.init {
+        transform: scale(3);
+        opacity: 0;
       }
     }
   }
@@ -82,11 +92,11 @@ $gridInfo: 12, 17, 21, 24, 27, 29, 30, 29, 27, 24, 21, 17, 12;
 
 @keyframes outRotate {
   0% {
-    transform: rotateX(0deg) rotateY(0deg);
+    transform: rotateX(360deg) rotateY(-360deg);
   }
 
   100% {
-    transform: rotateX(360deg) rotateY(-360deg);
+    transform: rotateX(0deg) rotateY(-0deg);
   }
 }
 
