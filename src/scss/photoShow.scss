@@ -13,11 +13,8 @@ $gridInfo: 12, 17, 21, 24, 27, 29, 30, 29, 27, 24, 21, 17, 12;
 
     .pwa-view {
       @include size(100%);
-      // @include posi(calc(50% - #{$box-height / 2}), calc(50% - #{$box-width / 2}));
-
       transform-style: preserve-3d;
       transform: rotateX(0deg) rotateY(0deg);
-      transition: 1s;
       &.out-rotate {
         animation: outRotate 30s linear infinite;
       }
@@ -59,12 +56,13 @@ $gridInfo: 12, 17, 21, 24, 27, 29, 30, 29, 27, 24, 21, 17, 12;
         @include posi(calc(50% - #{$box-height / 2}), calc(50% - #{$box-width / 2}));
       }
       &.circle {
-        box-shadow: 0 0 4px rgba(#000000, 0.5);
+        box-shadow: 0 0 2px rgba(#000000, 0.2);
       }
       &.flat,
       &.init {
+        border: 1px solid #fff;
         @include size(270px, 180px);
-        transition: transform 1s, opacity 0.5s .5s;
+        transition: transform 1s, opacity 0.5s 0.5s;
       }
       &.init {
         transform: scale(3);
@@ -72,44 +70,41 @@ $gridInfo: 12, 17, 21, 24, 27, 29, 30, 29, 27, 24, 21, 17, 12;
       }
     }
   }
-  .btn-stop {
-    @include posi(10px, 10px);
-    z-index: 2;
-  }
-  .btn-start {
-    @include posi(10px, 50px);
-    z-index: 2;
-  }
-  .btn-in {
-    @include posi(40px, 10px);
-    z-index: 2;
-  }
-  .btn-out {
-    @include posi(40px, 50px);
-    z-index: 2;
-  }
-}
 
-@keyframes outRotate {
-  0% {
-    transform: rotateX(360deg) rotateY(-360deg);
-  }
-
-  100% {
-    transform: rotateX(0deg) rotateY(-0deg);
-  }
-}
-
-@for $index from 1 through length($gridInfo) {
-  $xGutter: 120deg / (length($gridInfo) - 1);
-
-  @keyframes inRotate-#{$index - 7} {
-    0% {
-      transform: translateZ($perspective) rotateX(60deg - $xGutter * ($index - 1)) rotateY(0deg);
+  .pwa-start {
+    z-index: 10;
+    @include posi(calc(50% - 44px), calc(50% - 44px));
+    background-image: url(http://cdn.acohome.cn/back-pattern.png);
+    padding: 20px;
+    font-size: 0;
+    border-width: 4px;
+    border-radius: 50%;
+    @include button-variant(#c6cfff, darken(#c6cfff, 10));
+    .pwa-icon {
+      opacity: 0.8;
     }
+  }
 
-    100% {
-      transform: translateZ($perspective) rotateX(60deg - $xGutter * ($index - 1)) rotateY(360deg);
+  .pwa-icon {
+    @include size(40px);
+  }
+
+  .pwa-btns {
+    @include posi(null, 0, 0);
+    @include size(200px, 200px);
+    z-index: 100;
+    opacity: 0.3;
+    transition: 0.4s;
+    &:hover {
+      opacity: 0.8;
+    }
+    .btn {
+      z-index: 2;
+      @include size(88px, 88px);
+      @include button-variant(#ffcece, darken(#ffcece, 10));
+      padding: 20px 0;
+      border-radius: 16px;
+      border-width: 4px;
     }
   }
 }

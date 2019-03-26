@@ -1,4 +1,5 @@
 import React, { PureComponent } from 'react';
+import { Motion, spring } from 'react-motion';
 import Time from '../componentUtil/wordsWantSayToYou/Time';
 import CenterText from '../componentUtil/wordsWantSayToYou/CenterText';
 import steps from '../componentUtil/wordsWantSayToYou/steps';
@@ -45,25 +46,48 @@ export default class WordsWantSayToYou extends PureComponent {
   }
 
   componentWillUnmount() {
-    this.loop.stop();
-    this.removeEvent();
+    this.stop();
   }
 
   render() {
     const { stepIndex } = this.state;
+    console.log(this);
     return (
       <div className="wwsty-all">
         <canvas ref={this.canvasRef} />
         <div
-          className={`prev btn${stepIndex === 0 ? ' disabled' : ''}`}
+          className={`prev btn ${stepIndex === 0 ? 'disabled' : ''}`}
           onClick={this.prev}
         />
         <div
-          className={`next btn${
-            stepIndex === this.steps.length - 1 ? ' disabled' : ''
+          className={`next btn ${
+            stepIndex === this.steps.length - 1 ? 'disabled' : ''
           }`}
           onClick={this.next}
         />
+        <Motion
+          defaultStyle={{ x: 0 }}
+          style={{
+            x: spring(stepIndex === this.steps.length - 1 ? 150 : 0)
+          }}
+        >
+          {value =>
+            value.x > 4 && (
+              <span
+                className={`btn to-next ${
+                  stepIndex === this.steps.length - 1 ? 'show' : ''
+                }`}
+                style={{
+                  color: value.x !== 150 ? 'transparent' : '#fff',
+                  width: value.x
+                }}
+                onClick={this.props.next}
+              >
+                关于你
+              </span>
+            )
+          }
+        </Motion>
       </div>
     );
   }
@@ -81,6 +105,11 @@ export default class WordsWantSayToYou extends PureComponent {
     this.initEvent();
 
     steps[0](this.paintings);
+  };
+
+  stop = () => {
+    this.loop.stop();
+    this.removeEvent();
   };
 
   next = () => {

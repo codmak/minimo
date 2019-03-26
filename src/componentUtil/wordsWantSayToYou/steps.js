@@ -46,32 +46,32 @@ export default [
       textSize: 100
     });
   },
-  ...beforeText.map(createText),
+  // ...beforeText.map(createText),
   paintings => {
     let color = getTextColor();
     paintings.text.changeTextOption({
-      array: ['情话', '散落在网易云里'],
+      array: ['摘录于', '网易云热评'],
       color: color,
       textSize: 120
     });
   },
-  ...musicText.map(createText),
+  // ...musicText.map(createText),
   paintings => {
     let color = getTextColor();
     paintings.text.changeTextOption({
-      array: ['情话', '隐藏在诗中'],
+      array: ['在诗中'],
       color: color,
       textSize: 120
     });
   },
-  ...poemText.map(createText),
+  // ...poemText.map(createText),
   paintings => {
     let color = getTextColor();
     paintings.text.changeTextOption({
-      array: ['情话', '在心中'],
+      array: ['在心里'],
       color: color,
       textSize: 120
     });
   },
-  ...acoText.map(createText)
+  // ...acoText.map(createText)
 ];

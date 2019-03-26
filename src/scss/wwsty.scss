@@ -62,7 +62,7 @@
     }
   }
   .next {
-    @include posi(50%, null, 0, 20px);
+    @include posi(50%, null, null, 20px);
     &::before,
     &::after {
       left: 30px;
@@ -89,6 +89,20 @@
       &::after {
         transform: translateY(10px);
       }
+    }
+  }
+  .to-next {
+    @include posi(null, 50%, 10%, null);
+    @include button-variant(#ffcece, darken(#ffcece, 10));
+    transform: translateX(-50%);
+    opacity: 0.8;
+    border-radius: 16px;
+    border-width: 4px;
+    color: #fff;
+    padding: 10px 30px;
+    font-size: 20px;
+    &.show {
+      opacity: 0.8;
     }
   }
 }

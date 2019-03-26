@@ -1,3 +1,10 @@
+/*
+ * @Author: Aco
+ * @LastEditors: Aco
+ * @Description: 时间相关函数
+ * @Date: 2018-12-12 15:11:25
+ * @LastEditTime: 2019-03-26 13:04:05
+ */
 import dayjs from 'dayjs';
 
 const startDate = dayjs('2018-08-25T22:00+08:00');
@@ -6,6 +13,10 @@ export function pad(number) {
   return ('0' + number).substr(-2);
 }
 
+/**
+ * @description    获取从 2018-08-25T22:00+08:00 到目前时间的距离
+ * @return         {Array<string>}
+ */
 export function getTimeLong() {
   let nowDate = dayjs();
   let yearDiff = nowDate.diff(startDate, 'year');
