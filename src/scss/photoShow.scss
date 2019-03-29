@@ -50,12 +50,23 @@ $gridInfo: 12, 17, 21, 24, 27, 29, 30, 29, 27, 24, 21, 17, 12;
       border-radius: 4px;
       transition: 2s;
       opacity: 1;
-      &.circle-before,
+      padding: 1px;
+      overflow: hidden;
+      .image-wrap {
+        @include size(100%);
+        border-radius: 4px;
+        overflow: hidden;
+      }
+      img {
+        max-width: 100%;
+      }
+      &.show-init {
+        @include size(270px, 180px);
+        @include posi(calc(50% - 90px), calc(50% - 135px));
+      }
       &.circle {
         @include size($box-width, $box-height);
         @include posi(calc(50% - #{$box-height / 2}), calc(50% - #{$box-width / 2}));
-      }
-      &.circle {
         box-shadow: 0 0 2px rgba(#000000, 0.2);
       }
       &.flat,
@@ -89,12 +100,26 @@ $gridInfo: 12, 17, 21, 24, 27, 29, 30, 29, 27, 24, 21, 17, 12;
     @include size(40px);
   }
 
-  .pwa-btns {
-    @include posi(null, 0, 0);
-    @include size(200px, 200px);
+  .pwa-circle-control {
+    &.cc-left {
+      @include posi(null, 0, 0);
+      @include size(200px, 200px);
+      transform: translate(-200px);
+    }
+    &.cc-right {
+      @include posi(null, null, 0, 0);
+      @include size(300px, 200px);
+      transform: translate(300px);
+      .x-row {
+        height: 200px;
+      }
+    }
     z-index: 100;
     opacity: 0.3;
     transition: 0.4s;
+    &.show {
+      transform: none;
+    }
     &:hover {
       opacity: 0.8;
     }

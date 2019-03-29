@@ -3,12 +3,17 @@
  * @LastEditors: Aco
  * @Description: 时间相关函数
  * @Date: 2018-12-12 15:11:25
- * @LastEditTime: 2019-03-26 13:04:05
+ * @LastEditTime: 2019-03-27 13:18:21
  */
 import dayjs from 'dayjs';
 
 const startDate = dayjs('2018-08-25T22:00+08:00');
 
+/**
+ * @description    显示两位数字
+ * @param          {number}    需要显示成两位的数字
+ * @return         {string}
+ */
 export function pad(number) {
   return ('0' + number).substr(-2);
 }
