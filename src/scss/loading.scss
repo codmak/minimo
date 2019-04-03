@@ -20,6 +20,7 @@
       @include size(40px);
       border-radius: 4px;
       animation: 2s infinite ease-in;
+      transition: 0.4s;
       &.unloaded {
         opacity: 0.2;
       }
@@ -31,6 +32,11 @@
           animation-delay: ($index - 1) * 0.15s;
         }
       }
+    }
+    .aba-next {
+      @include posi(90%, 0);
+      width: 100%;
+      text-align: center;
     }
     .aba-btn-wrap {
       @include posi(80%, 0);

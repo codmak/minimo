@@ -11,29 +11,6 @@ export default class PaintingCake {
     this.loop = createLoop(() => this.draw());
   }
 
-  loadImage(urls) {
-    return new Promise(resolve => {
-      let loadNum = 0;
-      let condition = () => {
-        loadNum++;
-        if (loadNum === urls.length) {
-          resolve();
-        }
-      };
-      for (let i = 0; i < urls.length; i++) {
-        let image = new Image();
-        image.src = urls[i];
-        /* eslint-disable */
-        image.onload = () => {
-          this.cakeImages.push(image);
-          condition();
-        };
-        /* eslint-enable */
-        image.onerror = condition;
-      }
-    });
-  }
-
   drawSingleCake(cake) {
     const { ctx } = this.option;
 
@@ -112,26 +89,48 @@ export default class PaintingCake {
     });
   }
 
+  loadImage() {
+    return new Promise(resolve => {
+      let loadNum = 0;
+      let condition = () => {
+        loadNum++;
+        console.log(loadNum, images.length);
+        if (loadNum === images.length) {
+          resolve();
+        }
+      };
+      for (let i = 0; i < images.length; i++) {
+        let image = new Image();
+        image.src = images[i];
+        /* eslint-disable */
+        image.onload = () => {
+          this.cakeImages.push(image);
+          condition();
+        };
+        /* eslint-enable */
+        image.onerror = condition;
+      }
+    });
+  }
+
   start() {
     const { width } = this.option;
-    this.loadImage(images).then(() => {
-      clearTimeout(this.stopTimer);
-      this.intervalTimer = setInterval(() => {
-        let length = this.cakeImages.length;
-        this.cakes.push(
-          new Cake({
-            image: this.cakeImages[random(length)],
-            size: random(80, 30),
-            color: getCakeColor(),
-            speedX: random(50, -50),
-            speedY: random(50, -50),
-            x: random(width, 0),
-            y: -100
-          })
-        );
-      }, 1000);
-      this.loop.start();
-    });
+    clearTimeout(this.stopTimer);
+    this.intervalTimer = setInterval(() => {
+      let length = this.cakeImages.length;
+      this.cakes.push(
+        new Cake({
+          image: this.cakeImages[random(length)],
+          size: random(80, 30),
+          color: getCakeColor(),
+          speedX: random(50, -50),
+          speedY: random(50, -50),
+          x: random(width, 0),
+          y: -100
+        })
+      );
+    }, 1000);
+    this.loop.start();
   }
 
   stop() {

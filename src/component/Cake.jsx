@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import PaintingCake from '../componentUtil/cake/PaintingCake';
-import { $on } from '../util';
+import { $on, $emit } from '../util';
 
 export default class Cake extends PureComponent {
   constructor(props) {
@@ -20,6 +20,12 @@ export default class Cake extends PureComponent {
       ctx,
       width,
       height
+    });
+
+    $on('loadCakeImage', () => {
+      this.paintingCake.loadImage().then(() => {
+        $emit('cakeImageLoaded');
+      });
     });
 
     $on('startCake', () => {

@@ -14,7 +14,7 @@ $gridInfo: 12, 17, 21, 24, 27, 29, 30, 29, 27, 24, 21, 17, 12;
     .pwa-view {
       @include size(100%);
       transform-style: preserve-3d;
-      transform: rotateX(0deg) rotateY(0deg);
+      transform: rotateX(0deg) rotateY(0deg) translateZ(0);
       &.out-rotate {
         animation: outRotate 30s linear infinite;
       }
@@ -45,6 +45,8 @@ $gridInfo: 12, 17, 21, 24, 27, 29, 30, 29, 27, 24, 21, 17, 12;
 
     .pwa-cel {
       position: absolute;
+      @include posi(calc(50% - 90px), calc(50% - 135px));
+      @include size(270px, 180px);
       background: #ccc;
       user-select: none;
       border-radius: 4px;
@@ -56,28 +58,21 @@ $gridInfo: 12, 17, 21, 24, 27, 29, 30, 29, 27, 24, 21, 17, 12;
         @include size(100%);
         border-radius: 4px;
         overflow: hidden;
+        opacity: 1;
+        transition: 1s;
       }
       img {
-        max-width: 100%;
+        border-radius: 4px;
+        width: 100%;
       }
-      &.show-init {
-        @include size(270px, 180px);
-        @include posi(calc(50% - 90px), calc(50% - 135px));
+      &.init {
+        transform: scale(2);
+        opacity: 0;
       }
       &.circle {
         @include size($box-width, $box-height);
         @include posi(calc(50% - #{$box-height / 2}), calc(50% - #{$box-width / 2}));
         box-shadow: 0 0 2px rgba(#000000, 0.2);
-      }
-      &.flat,
-      &.init {
-        border: 1px solid #fff;
-        @include size(270px, 180px);
-        transition: transform 1s, opacity 0.5s 0.5s;
-      }
-      &.init {
-        transform: scale(3);
-        opacity: 0;
       }
     }
   }

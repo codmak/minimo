@@ -51,7 +51,6 @@ export default class WordsWantSayToYou extends PureComponent {
 
   render() {
     const { stepIndex } = this.state;
-    console.log(this);
     return (
       <div className="wwsty-all">
         <canvas ref={this.canvasRef} />

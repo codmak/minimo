@@ -46,7 +46,7 @@ export default [
       textSize: 100
     });
   },
-  // ...beforeText.map(createText),
+  ...beforeText.map(createText),
   paintings => {
     let color = getTextColor();
     paintings.text.changeTextOption({
@@ -55,7 +55,7 @@ export default [
       textSize: 120
     });
   },
-  // ...musicText.map(createText),
+  ...musicText.map(createText),
   paintings => {
     let color = getTextColor();
     paintings.text.changeTextOption({
@@ -64,7 +64,7 @@ export default [
       textSize: 120
     });
   },
-  // ...poemText.map(createText),
+  ...poemText.map(createText),
   paintings => {
     let color = getTextColor();
     paintings.text.changeTextOption({
@@ -73,5 +73,5 @@ export default [
       textSize: 120
     });
   },
-  // ...acoText.map(createText)
+  ...acoText.map(createText)
 ];

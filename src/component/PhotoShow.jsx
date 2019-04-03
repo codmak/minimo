@@ -17,9 +17,9 @@ export default class PhotoShow extends PureComponent {
         // 2 - 卡片全部合并到一起
         // 3 - 球形组成的一部分
         // 4 - 视角在球内，卡片在眼前
-        state: 3,
-        x: random(width - 300, 30),
-        y: random(height - 200, 20),
+        state: 0,
+        x: random(width / 2 - 150, -width / 2 + 150),
+        y: random(height / 2 - 100, -height / 2 + 100),
         rotate: random(30, -30),
         backgroundColor: getColor(),
         image: photos[index]
@@ -29,7 +29,7 @@ export default class PhotoShow extends PureComponent {
       // 2 - 卡片全部合并到一起
       // 3 - 球形组合完毕视角在球外
       // 4 - 球形组合完毕视角在球内
-      allCardState: 3,
+      allCardState: 0,
       flag: true
     };
     this.outRotateData = {
@@ -47,28 +47,39 @@ export default class PhotoShow extends PureComponent {
     this.ballYGutter = 20;
     this.transitionListen = null;
     this.showCardInfo = null;
+    this.showCardDom = null;
   }
 
   componentDidMount() {
     this.createOutRotate();
     this.createInRotate();
-  }
+    this.stageRef.current.addEventListener('click', e => {
+      const { allCardState } = this.state;
+      if (allCardState !== 4) return;
+      let cardDom = null;
+      for (let i = 0; i < e.path.length; i++) {
+        if (e.path[i].className.includes('pwa-cel')) {
+          cardDom = e.path[i];
+          break;
+        }
+      }
+      console.log(cardDom === this.showCardDom);
+      if (cardDom === this.showCardDom) {
+        cardDom.style.transform = '';
+        this.showCardDom = null;
+        return;
+      }
 
-  getCardStateClass = cardState => {
-    switch (cardState) {
-      case 0:
-        return 'init';
-      case 1:
-        return 'flat';
-      case 2:
-        return 'show-init';
-      case 3:
-      case 4:
-        return 'circle';
-      default:
-        return '';
-    }
-  };
+      if (this.showCardDom) {
+        this.showCardDom.style.transform = '';
+        this.showCardDom = null;
+      }
+      this.changeAnimateState(false);
+      cardDom.style.transform = `rotateY(${-this.inRotateData
+        .y}deg) rotateX(${-this.inRotateData.x}deg) translateZ(-100px)`;
+      this.showCardDom = cardDom;
+    });
+  }
 
   render() {
     const { cardInfo, allCardState } = this.state;
@@ -133,12 +144,11 @@ export default class PhotoShow extends PureComponent {
           <div className={`p-a pwa-view`} ref={this.stageRef}>
             {cardInfo.map((item, index) => (
               <div
-                className={`pwa-cel ${this.getCardStateClass(
-                  item.state
-                )} cel-${index}`}
-                style={this.getCardStyle(item)}
+                className={`pwa-cel cel-${index} init`}
+                style={{
+                  backgroundColor: item.backgroundColor
+                }}
                 key={index}
-                onClick={() => this.showCard(item)}
               >
                 <div className="image-wrap x-center">
                   <img src={item.image} alt="" />
@@ -187,15 +197,27 @@ export default class PhotoShow extends PureComponent {
    * @description    整体开始动画
    */
   startChange = () => {
-    this.setState({
-      allCardState: 1
-    });
     Promise.resolve()
+      .then(() => {
+        this.setState({
+          allCardState: 1
+        });
+      })
       .then(this.cardShow)
+      .then(() => {
+        this.setState({
+          allCardState: 2
+        });
+      })
       .then(this.initCard)
       .then(() => {
         this.outLoop.start();
-        this.createBall();
+        return this.createBall();
+      })
+      .then(() => {
+        this.setState({
+          allCardState: 3
+        });
       });
   };
 
@@ -255,73 +277,13 @@ export default class PhotoShow extends PureComponent {
   };
 
   /**
-   * @description    获取卡片的样式
-   * @param          {Object}    card
-   * @return         {Object}    卡片的样式
-   */
-  getCardStyle = card => {
-    if (card.state === 1) {
-      return {
-        top: card.y,
-        left: card.x,
-        transform: `rotate(${card.rotate}deg)`,
-        backgroundColor: card.backgroundColor
-      };
-    }
-
-    if (card.state === 4) {
-      return {
-        transform: `rotateY(${-this.inRotateData.y}deg) rotateX(${-this
-          .inRotateData.x}deg) translateZ(-100px)`,
-        backgroundColor: card.backgroundColor
-      };
-    }
-
-    return {
-      backgroundColor: card.backgroundColor
-    };
-  };
-
-  /**
    * @description    将之前显示的照片归位
    */
   unShowCard = () => {
-    if (this.showCardInfo) {
-      this.showCardInfo.state = 3;
-      this.setState({
-        flag: !this.state.flag
-      });
-      this.showCardInfo = null;
-      return true;
+    if (this.showCardDom) {
+      this.showCardDom.style.transform = '';
+      this.showCardDom = null;
     }
-  };
-
-  /**
-   * @description    当视角在球内时，控制卡片的呈现
-   * @param          {Object}    card
-   */
-  showCard = card => {
-    const { allCardState } = this.state;
-    if (allCardState !== 4) return;
-
-    if (this.showCardInfo === card) {
-      this.showCardInfo.state = 3;
-      this.setState({
-        flag: !this.state.flag
-      });
-      return;
-    }
-
-    this.changeAnimateState(false);
-
-    if (this.showCardInfo) {
-      this.showCardInfo.state = 3;
-    }
-    card.state = 4;
-    this.setState({
-      flag: !this.state.flag
-    });
-    this.showCardInfo = card;
   };
 
   viewUpper = () => {
@@ -424,25 +386,25 @@ export default class PhotoShow extends PureComponent {
    */
   createBall = () =>
     new Promise(resolve => {
-      const { cardInfo } = this.state;
       // eslint-disable-next-line
       this.state.allCardState = 2;
+      const { cardInfo } = this.state;
+      const stage = this.stageRef.current;
+      const cels = stage.childNodes;
       let index = cardInfo.length - 1;
       let timer = setInterval(() => {
         if (index === -1) {
           clearInterval(timer);
-          this.setState({
-            allCardState: 3
-          });
           setTimeout(() => {
             resolve();
           }, 1000);
           return;
         }
-        cardInfo[index].state = 3;
-        this.setState(state => ({
-          flag: !state.flag
-        }));
+        let cel = cels[index];
+        cel.style.transform = ``;
+        cel.style.transition = ``;
+        cel.className += ' circle';
+        cel.childNodes[0].style.opacity = 1;
         index--;
       }, 200);
     });
@@ -454,6 +416,8 @@ export default class PhotoShow extends PureComponent {
   initCard = () =>
     new Promise(resolve => {
       const { cardInfo } = this.state;
+      const stage = this.stageRef.current;
+      const cels = stage.childNodes;
       let index = cardInfo.length - 1;
       let timer = setInterval(() => {
         if (index === -1) {
@@ -463,10 +427,8 @@ export default class PhotoShow extends PureComponent {
           }, 1000);
           return;
         }
-        cardInfo[index].state = 2;
-        this.setState(state => ({
-          flag: !state.flag
-        }));
+        cels[index].style.transform = `none`;
+        cels[index].style.transition = `.4s`;
         index--;
       }, 20);
     });
@@ -478,19 +440,27 @@ export default class PhotoShow extends PureComponent {
   cardShow = () =>
     new Promise(resolve => {
       const { cardInfo } = this.state;
+      const stage = this.stageRef.current;
+      const cels = stage.childNodes;
       let index = 0;
       let timer = setInterval(() => {
-        if (index === cardInfo.length) {
+        if (index === cels.length) {
           clearInterval(timer);
           setTimeout(() => {
             resolve();
           }, 1000);
           return;
         }
-        cardInfo[index].state = 1;
-        this.setState(state => ({
-          flag: !state.flag
-        }));
+        if (index >= 40) {
+          cels[index - 40].childNodes[0].style.opacity = 0;
+        }
+        let cel = cels[index];
+        cel.style.transform = `translateX(${cardInfo[index].x}px) translateY(${
+          cardInfo[index].y
+        }px) rotate(${cardInfo[index].rotate}deg)`;
+        cel.style.opacity = 1;
+        cel.style.transition = 'transform 1s, opacity 0.5s 0.5s';
+        cel.className = cel.className.replace(/ ?init ?/, '');
         index++;
       }, 200);
     });

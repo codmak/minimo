@@ -2,7 +2,10 @@ import React, { PureComponent } from 'react';
 import { Motion, spring } from 'react-motion';
 import Cake from '../component/Cake';
 import { getColor } from '../componentUtil/loading/data/color';
-import { $emit } from '../util';
+import { $emit, $on, loadImage, loadAudio } from '../util';
+
+import { photos } from '../componentUtil/photoShow/data';
+import { musics } from '../componentUtil/audioBreath/data/music';
 
 class Load extends PureComponent {
   constructor(props) {
@@ -21,7 +24,15 @@ class Load extends PureComponent {
       musicProgress: 0,
       showNextPage: false
     };
+
+    this.percentProgress = 0;
+    this.percentProgressNow = 0;
+    this.percentTimer = null;
+
+    // 加载动画的颜色
     this.colorRandomArr = new Array(16).fill(0).map(() => getColor());
+
+    // 当页的音乐
     this.audio = new Audio();
     this.audio.loop = true;
     this.audio.src =
@@ -34,22 +45,46 @@ class Load extends PureComponent {
   }
 
   componentDidMount() {
-    let percent = 0;
-    let timer = setInterval(() => {
-      this.changePercentToArray(percent / 100);
-      if (percent >= 100) {
-        clearInterval(timer);
-      }
-      percent += 10;
-    }, 1000);
-    setTimeout(() => {
+    $on('cakeImageLoaded', () => {
+      this.percentProgress += 5;
       this.setState({
         cakeProgress: 1
       });
-    }, 1000);
+      this.toPercent();
+    });
+
+    // 页面渲染后一秒开始加载之后页面上用到的一些内容
     setTimeout(() => {
-      this.setState({
-        showNextPage: true
+      // 加载蛋糕所需要的图片
+      $emit('loadCakeImage');
+
+      // 后面的背景图
+      let backgroundImage = [
+        'http://cdn.acohome.cn/springBg.jpg',
+        'http://cdn.acohome.cn/summerBg.jpg'
+      ];
+
+      backgroundImage.forEach(url => {
+        loadImage(url, () => {
+          this.percentProgress += 1;
+          this.toPercent();
+        });
+      });
+
+      // 照片页面的图片
+      photos.forEach(url => {
+        loadImage(url, () => {
+          this.percentProgress += 1;
+          this.toPercent();
+        });
+      });
+
+      // 音乐
+      musics.forEach(url => {
+        loadAudio(url, () => {
+          this.percentProgress += 2;
+          this.toPercent();
+        });
       });
     }, 1000);
   }
@@ -57,94 +92,17 @@ class Load extends PureComponent {
   componentWillUnmount() {
     $emit('stopCake');
     this.audio.pause();
+    clearInterval(this.percentTimer);
   }
-
-  changePercentToArray = percent => {
-    let num = Math.floor(percent * 16);
-    let newRect = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
-    /* eslint-disable */
-    loop: {
-      for (let i = 0; i < 4; i++) {
-        for (let j = 0; j < 4; j++) {
-          if (i * 4 + j < num) {
-            newRect[j][i] = 1;
-          } else {
-            break loop;
-          }
-        }
-      }
-    }
-    /* eslint-enable */
-    this.setState({
-      rect: newRect
-    });
-  };
-
-  startCake = () => {
-    $emit('startCake');
-    this.setState({
-      cakeProgress: 2
-    });
-  };
-
-  stopCake = () => {
-    $emit('stopCake');
-    this.setState({
-      cakeProgress: 3
-    });
-  };
-
-  moreCake = () => {
-    const { cakeProgress } = this.state;
-    if (cakeProgress !== 2) {
-      this.startCake();
-    } else {
-      $emit('moreCake');
-    }
-  };
-
-  playMusic = () => {
-    const { musicProgress } = this.state;
-    if (musicProgress === 2) {
-      this.audio.pause();
-      this.setState({
-        musicProgress: 3
-      });
-    } else {
-      this.audio.play();
-      this.setState({
-        musicProgress: 2
-      });
-    }
-  };
-
-  getMusicBtnClass = () => {
-    const { musicProgress } = this.state;
-    let className = ['btn', 'music-btn'];
-    if (musicProgress > 1) {
-      className.push('music-icon');
-    }
-    if (musicProgress === 2) {
-      className.push('music-stop');
-    }
-    if (musicProgress === 3) {
-      className.push('music-start');
-    }
-    return className.join(' ');
-  };
-
-  toNextPage = () => {
-    this.props.history.push('/season/spring');
-  };
 
   render() {
     const { rect, cakeProgress, musicProgress, showNextPage } = this.state;
     return (
-      <div className="loading x-p-r">
+      <div className="x-p-r loading">
         <div className="p-a-all">
           <Cake />
         </div>
-        <div className="animate-btn-all p-a-all x-center">
+        <div className="x-center p-a-all animate-btn-all">
           <div className="animate-wrap">
             {rect.map((col, i) => (
               <div className="col" key={i}>
@@ -160,7 +118,7 @@ class Load extends PureComponent {
               </div>
             ))}
           </div>
-          <div className="aba-btn-wrap x-row x-flex-a">
+          <div className="x-row x-flex-a aba-btn-wrap">
             <div>
               <Motion
                 defaultStyle={{ x: 0 }}
@@ -245,22 +203,24 @@ class Load extends PureComponent {
                 }
               </Motion>
             </div>
+          </div>
+          <div className="aba-next">
             <div>
               <Motion
                 defaultStyle={{ x: 0 }}
-                style={{ x: spring(showNextPage ? 220 : 0) }}
+                style={{ x: spring(showNextPage ? 150 : 0) }}
               >
                 {value =>
                   value.x > 4 && (
                     <span
                       className="btn next-btn"
                       style={{
-                        color: value.x !== 220 ? 'transparent' : '#fff',
+                        color: value.x !== 150 ? 'transparent' : '#fff',
                         width: value.x
                       }}
                       onClick={this.toNextPage}
                     >
-                      {showNextPage ? '有些话想对你说呢~' : ''}
+                      {showNextPage ? '想听情话嘛~' : ''}
                     </span>
                   )
                 }
@@ -271,6 +231,98 @@ class Load extends PureComponent {
       </div>
     );
   }
+
+  startCake = () => {
+    $emit('startCake');
+    this.setState({
+      cakeProgress: 2
+    });
+  };
+
+  stopCake = () => {
+    $emit('stopCake');
+    this.setState({
+      cakeProgress: 3
+    });
+  };
+
+  moreCake = () => {
+    const { cakeProgress } = this.state;
+    if (cakeProgress !== 2) {
+      this.startCake();
+    } else {
+      $emit('moreCake');
+    }
+  };
+
+  getMusicBtnClass = () => {
+    const { musicProgress } = this.state;
+    let className = ['btn', 'music-btn'];
+    if (musicProgress > 1) {
+      className.push('music-icon');
+    }
+    if (musicProgress === 2) {
+      className.push('music-stop');
+    }
+    if (musicProgress === 3) {
+      className.push('music-start');
+    }
+    return className.join(' ');
+  };
+
+  playMusic = () => {
+    const { musicProgress } = this.state;
+    if (musicProgress === 2) {
+      this.audio.pause();
+      this.setState({
+        musicProgress: 3
+      });
+    } else {
+      this.audio.play();
+      this.setState({
+        musicProgress: 2
+      });
+    }
+  };
+
+  toNextPage = () => {
+    this.props.history.push('/season/spring');
+  };
+
+  toPercent = () => {
+    if (this.percentTimer) return;
+    this.percentTimer = setInterval(() => {
+      this.changePercentToArray(this.percentProgressNow / 100);
+      this.percentProgressNow += 1;
+      if (this.percentProgressNow > this.percentProgress) {
+        this.percentProgressNow = this.percentProgress;
+        clearInterval(this.percentTimer);
+        this.percentTimer = null;
+      }
+    }, 500);
+  };
+
+  changePercentToArray = percent => {
+    let num = Math.floor(percent * 16);
+    let newRect = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
+    /* eslint-disable */
+    loop: {
+      for (let i = 0; i < 4; i++) {
+        for (let j = 0; j < 4; j++) {
+          if (i * 4 + j < num) {
+            newRect[j][i] = 1;
+          } else {
+            break loop;
+          }
+        }
+      }
+    }
+    /* eslint-enable */
+    this.setState({
+      rect: newRect,
+      showNextPage: this.percentProgressNow > 100
+    });
+  };
 }
 
 export default Load;

@@ -2,11 +2,11 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 
-import { wrapComponent, applyStore, applyRouter } from './appUtil';
+import { wrapComponent, applyRouter } from './appUtil';
 
 import './scss/index.scss';
 
 ReactDOM.render(
-  wrapComponent(<App />, [applyStore, applyRouter('hash')]),
+  wrapComponent(<App />, [applyRouter('hash')]),
   document.getElementById('root')
 );
