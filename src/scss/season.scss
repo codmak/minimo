@@ -3,40 +3,13 @@
 
   .sa-top {
     height: 100%;
-    > div {
+    .all {
       height: 100%;
-      .all {
-        height: 100%;
-        
-      }
     }
   }
 
   .sa-music-wrap {
     @include size(100%, 100px);
     @include posi(0, 0);
-
   }
-}
-
-.rotate-enter {
-  opacity: 0;
-  transform: rotate(360deg) scale(0);
-}
-
-.rotate-enter.rotate-enter-active {
-  opacity: 1;
-  transform: rotate(0deg) scale(1);
-  transition: 800ms ease-out;
-}
-
-.rotate-exit {
-  opacity: 1;
-  transform: rotate(-360deg) scale(1);
-}
-
-.rotate-exit.rotate-exit-active {
-  opacity: 0;
-  transform: rotate(0deg) scale(0);
-  transition: 800ms ease-out;
 }

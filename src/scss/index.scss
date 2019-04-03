@@ -1,15 +1,15 @@
-@import 'core/init';
-@import 'core/buttons';
-@import './app';
-@import './loading';
-@import './cake';
-@import './season';
-@import './spring';
-@import './audio';
-@import './music';
-@import './wwsty';
-@import './summer';
-@import './photoShow.scss';
+@import "core/init";
+@import "core/buttons";
+@import "./app";
+@import "./loading";
+@import "./cake";
+@import "./season";
+@import "./spring";
+@import "./audio";
+@import "./music";
+@import "./wwsty";
+@import "./summer";
+@import "./photoShow";
 
 .p-a-all {
   @include posi(0, 0);

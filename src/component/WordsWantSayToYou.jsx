@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import { Motion, spring } from 'react-motion';
 import Time from '../componentUtil/wordsWantSayToYou/Time';
 import CenterText from '../componentUtil/wordsWantSayToYou/CenterText';
-import steps from '../componentUtil/wordsWantSayToYou/steps';
+import { steps } from '../componentUtil/wordsWantSayToYou/data/steps';
 import { createLoop } from '../util';
 
 export default class WordsWantSayToYou extends PureComponent {

@@ -3,20 +3,15 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "animate.css": "^3.7.0",
     "dayjs": "^1.8.6",
     "events": "^3.0.0",
     "hex-rgb": "^3.0.0",
-    "node-sass": "^4.10.0",
     "ramda": "^0.26.1",
     "react": "^16.6.3",
     "react-dom": "^16.6.3",
     "react-motion": "^0.5.2",
-    "react-redux": "^6.0.0",
     "react-router-dom": "^4.3.1",
-    "react-scripts": "2.1.1",
-    "react-transition-group": "^2.5.3",
-    "redux": "^4.0.1"
+    "react-scripts": "2.1.1"
   },
   "scripts": {
     "start": "react-scripts start",
