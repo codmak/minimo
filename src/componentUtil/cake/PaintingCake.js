@@ -94,7 +94,6 @@ export default class PaintingCake {
       let loadNum = 0;
       let condition = () => {
         loadNum++;
-        console.log(loadNum, images.length);
         if (loadNum === images.length) {
           resolve();
         }

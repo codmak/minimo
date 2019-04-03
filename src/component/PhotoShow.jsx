@@ -1,7 +1,9 @@
 import React, { PureComponent } from 'react';
 import { Motion, spring } from 'react-motion';
 import { random, createLoop } from '../util/';
-import { photos, getColor } from '../componentUtil/photoShow/data';
+
+import { getColor } from '../componentUtil/photoShow/data/color';
+import { getPhoto } from '../componentUtil/photoShow/data/photo';
 
 export default class PhotoShow extends PureComponent {
   constructor(props) {
@@ -22,7 +24,7 @@ export default class PhotoShow extends PureComponent {
         y: random(height / 2 - 100, -height / 2 + 100),
         rotate: random(30, -30),
         backgroundColor: getColor(),
-        image: photos[index]
+        image: getPhoto(index)
       })),
       // 0 - 初始状态 所有卡片隐藏
       // 1 - 卡片随意摆放

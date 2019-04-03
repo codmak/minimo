@@ -82,7 +82,7 @@ export default class WordsWantSayToYou extends PureComponent {
                 }}
                 onClick={this.props.next}
               >
-                关于你
+                ABOUT YOU
               </span>
             )
           }

@@ -4,7 +4,7 @@ import Cake from '../component/Cake';
 import { getColor } from '../componentUtil/loading/data/color';
 import { $emit, $on, loadImage, loadAudio } from '../util';
 
-import { photos } from '../componentUtil/photoShow/data';
+import { getPhoto } from '../componentUtil/photoShow/data/photo';
 import { musics } from '../componentUtil/audioBreath/data/music';
 
 class Load extends PureComponent {
@@ -72,12 +72,12 @@ class Load extends PureComponent {
       });
 
       // 照片页面的图片
-      photos.forEach(url => {
-        loadImage(url, () => {
+      for (let i = 0; i < 290; i++) {
+        loadImage(getPhoto(i), () => {
           this.percentProgress += 1;
           this.toPercent();
         });
-      });
+      }
 
       // 音乐
       musics.forEach(url => {
@@ -220,7 +220,7 @@ class Load extends PureComponent {
                       }}
                       onClick={this.toNextPage}
                     >
-                      {showNextPage ? '想听情话嘛~' : ''}
+                      {showNextPage ? 'NEXT' : ''}
                     </span>
                   )
                 }
@@ -293,8 +293,9 @@ class Load extends PureComponent {
     if (this.percentTimer) return;
     this.percentTimer = setInterval(() => {
       this.changePercentToArray(this.percentProgressNow / 100);
-      this.percentProgressNow += 1;
-      if (this.percentProgressNow > this.percentProgress) {
+      let distant = this.percentProgress - this.percentProgressNow;
+      this.percentProgressNow += distant > 4 ? distant / 10 : distant;
+      if (this.percentProgressNow >= this.percentProgress) {
         this.percentProgressNow = this.percentProgress;
         clearInterval(this.percentTimer);
         this.percentTimer = null;
