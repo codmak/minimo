@@ -67,7 +67,7 @@ export default class WordsWantSayToYou extends PureComponent {
         <Motion
           defaultStyle={{ x: 0 }}
           style={{
-            x: spring(stepIndex === this.steps.length - 1 ? 150 : 0)
+            x: spring(stepIndex === this.steps.length - 1 ? 250 : 0)
           }}
         >
           {value =>
@@ -77,7 +77,7 @@ export default class WordsWantSayToYou extends PureComponent {
                   stepIndex === this.steps.length - 1 ? 'show' : ''
                 }`}
                 style={{
-                  color: value.x !== 150 ? 'transparent' : '#fff',
+                  color: value.x !== 250 ? 'transparent' : '#fff',
                   width: value.x
                 }}
                 onClick={this.props.next}
@@ -113,7 +113,7 @@ export default class WordsWantSayToYou extends PureComponent {
 
   next = () => {
     const { stepIndex } = this.state;
-    if (stepIndex === this.paintings.length - 1) return;
+    if (stepIndex === this.steps.length - 1) return;
     this.setState({
       stepIndex: stepIndex + 1
     });
