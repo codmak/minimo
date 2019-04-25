@@ -26,4 +26,4 @@ yarn-error.log*
 
 /src/assert/media
 
-/src/**/**/data
+# /src/**/**/data
